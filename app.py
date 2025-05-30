@@ -24,7 +24,7 @@ def get_found_items():
     ''')
     rows = cursor.fetchall()
     conn.close()
-    return rows
+    return [dict(row) for row in rows] 
 
 
 app = Flask(__name__, static_folder='static')
@@ -74,6 +74,26 @@ def index_ko():
 def find_ko():
     user_email = session.get('email')  # Lấy email từ session
     items=get_found_items()
+
+    building_map = {
+        "101": "언더우드기념도서관",
+        "203": "운동장",
+        "305": "송도1학사",
+        "405": "송도2학사",
+        "302": "자유관A",
+        "301": "자유관B",
+        "510": "저에너지친환경실험주택",
+        "501": "종합관",
+        "401": "진리관A",
+        "402": "진리관B",
+        "502": "진리관C",
+        "503": "진리관D"
+    }
+
+    for item in items:
+        item['ubuilding'] = building_map.get(item['ubuilding'], item['ubuilding'])
+
+
     return render_template('ko/find_ko.html', user_email=user_email,items=items)
 
 @app.route('/ko/register')
