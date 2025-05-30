@@ -13,8 +13,8 @@ cursor.execute('''
         start_ymd TEXT,
         prdt_nm TEXT,
         ubuilding TEXT,
-        image_path TEXT
-    )
+        image_path TEXT,
+        user_id TEXT  
 ''')
 
 conn.commit()
