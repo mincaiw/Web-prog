@@ -13,6 +13,20 @@ NAVER_CLIENT_SECRET=os.getenv("gL2gWzBkk0bOSN8TnYdpbMRNDFVXPnDP5wdixzgM")
 from werkzeug.utils import secure_filename
 from flask import session
 
+def get_found_items():
+    conn = sqlite3.connect('instance/yonsei.db')
+    conn.row_factory=sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT id, prdt_cl_nm, start_ymd, prdt_nm, ubuilding, image_path
+        FROM found_items
+        ORDER BY start_ymd DESC
+    ''')
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'yonsei_uni_140'
 CORS(app)
@@ -59,7 +73,8 @@ def index_ko():
 @app.route('/ko/find')
 def find_ko():
     user_email = session.get('email')  # Lấy email từ session
-    return render_template('ko/find_ko.html', user_email=user_email)
+    items=get_found_items()
+    return render_template('ko/find_ko.html', user_email=user_email,items=items)
 
 @app.route('/ko/register')
 def register_ko():
