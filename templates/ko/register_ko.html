@@ -39,16 +39,6 @@
     </style>
   </head>
 
-  <body>
-    <!-- 로그인 정보 표시 -->
-    <div class="user-info">
-      {% if user_email %} {{ user_email }} 님 |
-      <a href="{{ url_for('auth_bp.logout') }}">로그아웃</a>
-      {% else %}
-      <a href="{{ url_for('auth_bp.login') }}">로그인</a>
-      {% endif %}
-    </div>
-
     <header>
       <div class="container">
         <div class="logo">
@@ -60,7 +50,36 @@
             />
           </a>
         </div>
-        
+                <ul>
+          <div class="user-info">
+          {% if user_email %} 
+            {{ user_email }} 님
+            <a href="{{ url_for('auth_bp.logout') }}">로그아웃</a>
+          </div>
+          <br/>
+          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% else %}
+          </div>
+          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
+          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
+          <li><a href="{{ url_for('map_ko')}}">지도</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% endif %}
+        </ul>
+
     </div>
 
 <div class="findList">
