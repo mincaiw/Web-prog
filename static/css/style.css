@@ -171,3 +171,26 @@ ul li a.active {
   background-color: #4169e1;
   color: #fff;
 }
+
+.user-info {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: "Noto Sans KR", "Pretendard", sans-serif;
+  color: #333;
+}
+
+.user-info a {
+  color: #005bac;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.user-info a:hover {
+  text-decoration: underline;
+}

@@ -41,12 +41,12 @@ def register_en():
 # Korean page
 @app.route('/ko')
 def index_ko():
-    user_email = None
+    user_email = session.get('email')
 
     if 'user_id' in session:
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT email FROM users WHERE id = ?', (session['email'],))
+        cursor.execute('SELECT email FROM users WHERE id = ?', (session['user_id'],))  # <-- FIXED HERE
         user = cursor.fetchone()
         conn.close()
 
@@ -54,6 +54,7 @@ def index_ko():
             user_email = user[0]
 
     return render_template('ko/index_ko.html', user_email=user_email)
+
 
 
 @app.route('/ko/find')
