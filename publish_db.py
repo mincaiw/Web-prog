@@ -13,9 +13,8 @@ cursor.execute('''
         start_ymd TEXT,
         prdt_nm TEXT,
         ubuilding TEXT,
-        description TEXT,
         image_path TEXT
-    );
+    )
 ''')
 
 conn.commit()
