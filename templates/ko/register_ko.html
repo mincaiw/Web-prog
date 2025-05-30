@@ -44,6 +44,7 @@
         <ul class="gnb_lang">
             <li><a href="{{ url_for('index_ko') }}">한국어</a></li>
             <li><a href="{{ url_for('index_en') }}">ENGLISH</a></li>
+            <li><a href="{{ url_for('index_ch') }}">中文</a></li>
         </ul>
     </div>
 
@@ -52,7 +53,7 @@
     <div class="lost_qfind2">
         <h2>습득물을 등록해보세요!</h2>
     </br>
-            <form method="POST" action="{{ url_for('auth_bp.register_item') }}" enctype="multipart/form-data">
+
             <div class="list">
                 <!-- 습득물 종류 입력 -->
                 <label for="PRDT_CL_NM">분류명(내용):</label><br>
@@ -84,10 +85,6 @@
                       <option value="503">진리관D</option>
                     </select>
                     <div id="map"></div>
-
-                    <!-- 이미지 업로드 -->
-                    <label for="itemImage">사진 업로드:</label><br>
-                    <input type="file" id="itemImage" name="itemImage" accept="image/*"><br><br>
 
             </div>
             <input type="submit" value="Submit">
