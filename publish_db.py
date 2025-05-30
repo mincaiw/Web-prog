@@ -1,9 +1,9 @@
 import sqlite3
 import os
 
-db_path = os.path.abspath('instance/yonsei.db')
+yonsei_db_path = os.path.abspath(os.path.join('instance', 'yonsei.db'))
 
-conn = sqlite3.connect(db_path)
+conn = sqlite3.connect(yonsei_db_path)
 cursor = conn.cursor()
 
 cursor.execute('''

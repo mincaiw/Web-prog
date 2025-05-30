@@ -1,97 +1,111 @@
 <!DOCTYPE html>
 <html lang="ko">
-
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Yonsei Lost & Found</title>
-    <!-- Chrome, Safari, IE -->
+
     <link
       rel="shortcut icon"
-      href="static/images/기본형_심볼-01_cut.png"
+      href="{{ url_for('static', filename='images/기본형_심볼-01_cut.png') }}"
       type="image/png"
     />
     <link
-      rel="icon"
-      href="static/images/기본형_심볼-01_cut.png"
-      type="image/png"
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style_find.css') }}"
     />
- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_find.css') }}" />
   </head>
-
-        <body>
-            <header>
-                <div class="container">
-                    <!-- Logo -->
-                    <div class="logo">
-                    <img
-                        src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
-                        alt="Yonsei"
-                        style="width: 225px; height: auto"
-                    />
-                    </div>
-
-                    <!-- Langugages -->
-                    <ul class="gnb_lang">
-                        <li><a href="{{ url_for('index_ko') }}">한국어</a></li>
-                        <li><a href="{{ url_for('index_en') }}">ENGLISH</a></li>
-                    </ul>
-                </div>
-                
-
-
-<div class="findList">
-
-    <div class="lost_qfind2">
-        <h1>습득물을 검색해보세요!</h1>
-    </br>
-
-            <div class="list">
-                <!-- 날짜입력 -->
-                <label for="START_YMD">기간:</label><br>
-                <input type="date" id="START_YMD" name="START_YMD"><br><br>
-
-                <!-- 습득물명 입력 -->
-                <label for="PRDT_NM">습득물명:</label><br>
-                <input type="text" id="PRDT_NM" name="PRDT_NM"><br><br>
-
-                    <!-- 건물 선택  -->
-                    <label for="DEP_PLACE">건물선택:</label><br>
-                    <select name="uBuilding" id="uBuilding">
-                        <option value="ALL" selected>전체</option> 
-                        <option value="101">언더우드기념도서관</option>
-                        <option value="203">운동장</option>
-                        <option value="305">송도1학사</option>
-                        <option value="405">송도2학사</option>
-                        <option value="302">자유관A</option>
-                        <option value="301">자유관B</option>
-                        <option value="510">저에너지친환경실험주택</option>
-                        <option value="501">종합관</option>
-                        <option value="401">진리관A</option>
-                        <option value="402">진리관B</option>
-                        <option value="502">진리관C</option>
-                        <option value="503">진리관D</option>
-                    </select>
-                    <!-- 지도 표시 영역 -->
-                <iframe id="mapFrame" src="map_ko.html" style="width:100%; height:500px; border:1px solid #ccc; margin-top:20px;"></iframe>
-
-            </div>
-            <input type="submit" value="Submit">
+  <body>
+    <header>
+      <div class="container">
+        <!-- 로고 -->
+        <div class="logo">
+          <a href="{{ url_for('index_ko')}}">
+            <img
+              src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
+              alt="Yonsei"
+              style="width: 235px; height: auto"
+            />
+          </a>
         </div>
-     </div>
-        <script>
-            const mapFrame = document.getElementById("mapFrame");
+    
+            <ul>
+          <div class="user-info">
+          {% if user_email %} {{ user_email }} 님
+          <a href="{{ url_for('auth_bp.logout') }}">로그아웃</a>
+          </div>
+        </br>
+          <li>
+          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% else %}
+          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
+          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
+          <li><a href="{{ url_for('map_ko')}}">지도</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% endif %}
+        </ul>
 
-            mapFrame.onload = function () {
-            document.getElementById("uBuilding").addEventListener("change", function () {
-                const selectedCode = this.value;
-                if (mapFrame.contentWindow && typeof mapFrame.contentWindow.updateMapByBuildingCode === 'function') {
-                mapFrame.contentWindow.updateMapByBuildingCode(selectedCode);
-                }
-            });
-            };
-          </script>          
-        </body>
-        </header>
-    </html>
+    </header>
 
+    <main class="findList">
+      <div class="lost_qfind2">
+        <h1>습득물을 검색해보세요!</h1>
+
+        <!-- 검색창 -->
+        <div class="search-container">
+          <form
+            method="GET"
+            action="{{ url_for('auth_bp.register_item') }}"
+            class="search-form"
+          >
+            <input
+              type="text"
+              class="search-input"
+              placeholder="예: 지갑, 휴대폰, 카드..."
+              value="{{ request.args.get('q', '') }}"
+            />
+            <button type="submit" class="search-btn">검색</button>
+          </form>
+        </div>
+
+        <!-- 습득물 리스트 -->
+        <ul class="item-list">
+          {% for item in items %}
+          <li class="item">
+            <h3 class="item-title">{{ item.prdt_nm }}</h3>
+            <p class="item-detail">
+              📅 {{ item.start_ymd }} | 📍 {{ item.ubuilding }} | 🏷️ {{
+              item.prdt_cl_nm }}
+            </p>
+            <p class="item-description">{{ item.description }}</p>
+            {% if item.image_path %}
+            <img
+              src="{{ url_for('static', filename=item.image_path.replace('static/', '')) }}"
+              alt="습득물 이미지"
+              class="item-image"
+            />
+            {% endif %}
+          </li>
+          {% else %}
+          <li class="no-result-wrapper">
+            <div class="no-result">🔍 등록된 습득물이 없습니다.</div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

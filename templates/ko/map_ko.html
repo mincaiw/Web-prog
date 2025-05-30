@@ -1,206 +1,238 @@
-
 <!DOCTYPE html>
-    <html lang="ko">
-    <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"></script>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='/images/기본형_심볼-01_cut.png') }}"
+      type="image/png"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <script
+      type="text/javascript"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"
+    ></script>
     <title>연세대학교 국제캠퍼스 지도</title>
     <style>
-      html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: sans-serif;
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: sans-serif;
       }
       #container {
-      display: flex;
-      height: 100%;
+        display: flex;
+        height: 100%;
       }
       #infoPanel {
-      width: 25%;
-      background: #f7f7f7;
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-      overflow-y: auto;
-      transition: all 0.3s ease;
-      display: none; /* Initially hidden */
+        width: 25%;
+        background: #f7f7f7;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        display: block; /* Initially hidden */
       }
       #infoPanel h3 {
-      margin-top: 0;
+        margin-top: 0;
       }
       #map {
-      width: 100%;
-      height: 100%;
-      transition: all 0.3s ease;
+        width: 100%;
+        height: 100%;
+        transition: all 0.3s ease;
       }
       #map.with-panel {
-      width: 75%;
+        width: 75%;
       }
-      .building-img{
-      width: 100%;
-      max-width: 200px;
-      margin-top:10px;
-      border-radius:6px;
+      .building-img {
+        width: 100%;
+        max-width: 200px;
+        margin-top: 10px;
+        border-radius: 6px;
       }
       #instruction {
-      color: #555;
-      font-size: 14px;
-      opacity: 0.8;
+        color: #555;
+        font-size: 14px;
+        opacity: 0.8;
       }
-      #buildingDetails{
-      color:#888;
-      font-size: 15px;
+      #buildingDetails {
+        color: #888;
+        font-size: 15px;
       }
-  </style>
+    </style>
   </head>
   <body>
-      <div id="container">
+    <div id="container">
       <div id="infoPanel">
-      <h3>건물 정보</h3>
-      <div id="buildingDetails">마커를 클릭하면 정보가 표시됩니다.</div>
+        <div class="logo">
+          <a href="{{ url_for('index_ko') }}">
+            <img
+              src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
+              alt="Yonsei"
+              style="width: 225px; height: auto"
+            />
+          </a>
+        </div>
+        <h3>건물 정보</h3>
+        <div id="buildingDetails">마커를 클릭하면 정보가 표시됩니다.</div>
       </div>
       <div id="map"></div>
-      </div>
-      <script>
-          const buildingData = {
-            "101": { 
-              name: "언더우드기념도서관", 
-              coords: [37.382499674654284, 126.67110064169147], 
-              img: "/static/map_img/101.png",
-              info: {
-                office: "1층 이용자통합서비스데스크",
-                time: "월~금 09:00~17:00",
-                phone:"032-749-3301"
-            }},
-            "203": { 
-              name: "운동장", 
-              coords: [37.38505660284087, 126.67039362700353], 
-              img: "/static/map_img/203.png",
-              info: {
-                office: "송도2학사 D동 1층 경비실",
-                time: "월~금 09:00~17:00",
-                phone:"032-749-5205"
-            }},
-            "305": { 
-              name: "송도1학사", 
-              coords: [37.38186484004004,126.66721220250625], 
-              img: "/static/map_img/305.png",
-              info: {
-                office: "송도1학사 C동 1층 경비실",
-                time: "월~금 09:00~17:00",
-                phone:"032-749-5105"
-            }},
-            "405": { 
-              name: "송도2학사", 
-              coords: [37.38332087037019,126.67236874521204], 
-              img: "/static/map_img/405.png",
-              info: {
-                office: "송도2학사 D동 1층 경비실",
-                time: "월~금 09:00~17:00",
-                phone:"032-749-5205"
-            }},
-            "302": { 
-              name: "자유관A", 
-              coords: [37.382683576045125, 126.6691958479459], 
-              img: "/static/map_img/302.png",
-              info: {
-                office: "자유관A 1층 경비실",
-                time: "월~금 09:00~17:00",
-                phone:"032-749-3131"
-            }},
-            "301": { 
-              name: "자유관B", 
-              coords: [37.3834643374717, 126.66808021643931], 
-               img: "/static/map_img/301.png",
-              info: {
-                office: "자유관B 1층 경비실",
-                time: "월~금 09:00~17:00",
-                phone:"032-749-3300"
-            }},
-            "510": { 
-              name: "저에너지친환경실험주택", 
-              coords: [37.38005045818827, 126.6700429389237], 
-               img: "/static/map_img/510.png",
-              info: {
-                office: "경비실",
-                time: "월~금 09:00~17:00",
-            }},
-            "501": { 
-              name: "종합관", 
-              coords: [37.382286855360775, 126.66990470276706], 
-               img: "/static/map_img/501.png",
-              info: {
-                office: "종합관 1층 경비실",
-                time: "월~금 09:00~17:00",
-                phone:"032-749-2118"
-            }},
-            "401": { 
-              name: "진리관A", 
-              coords: [37.38334132885237, 126.67081326999616], 
-               img: "/static/map_img/401.png",
-              info: {
-                office: "진리관A 1층 경비실",
-                time: "월~금 09:00~17:00",
-            }},
-            "402": { 
-              name: "진리관B", 
-              coords: [37.382962779406405, 126.67157991126135], 
-              img: "/static/map_img/402.png",
-              info: {
-                office: "진리관B 1층 경비실",
-                time: "월~금 09:00~17:00",
-            }},
-            "502": { 
-              name: "진리관C", 
-              coords: [37.38183522818802, 126.67031175217751], 
-              img: "/static/map_img/502.png",
-              info: {
-                office: "진리관C 1층 경비실",
-                time: "월~금 09:00~17:00",
-            }},
-            "503": { 
-              name: "진리관D", 
-              coords: [37.38114903557426, 126.67142127822844], 
-              img: "/static/map_img/503.png",
-              info: {
-                office: "진리관D 1층 경비실",
-                time: "월~금 09:00~17:00",
-            }},
-          };
-            
-            const map = new naver.maps.Map('map', {
-              center: new naver.maps.LatLng(37.3820, 126.6711),
-              zoom: 17
-            });
+    </div>
+    <script>
+      const buildingData = {
+        101: {
+          name: "언더우드기념도서관",
+          coords: [37.382499674654284, 126.67110064169147],
+          img: "/static/map_img/101.png",
+          info: {
+            office: "1층 이용자통합서비스데스크",
+            time: "월~금 09:00~17:00",
+            phone: "032-749-3301",
+          },
+        },
+        203: {
+          name: "운동장",
+          coords: [37.38505660284087, 126.67039362700353],
+          img: "/static/map_img/203.png",
+          info: {
+            office: "송도2학사 D동 1층 경비실",
+            time: "월~금 09:00~17:00",
+            phone: "032-749-5205",
+          },
+        },
+        305: {
+          name: "송도1학사",
+          coords: [37.38186484004004, 126.66721220250625],
+          img: "/static/map_img/305.png",
+          info: {
+            office: "송도1학사 C동 1층 경비실",
+            time: "월~금 09:00~17:00",
+            phone: "032-749-5105",
+          },
+        },
+        405: {
+          name: "송도2학사",
+          coords: [37.38332087037019, 126.67236874521204],
+          img: "/static/map_img/405.png",
+          info: {
+            office: "송도2학사 D동 1층 경비실",
+            time: "월~금 09:00~17:00",
+            phone: "032-749-5205",
+          },
+        },
+        302: {
+          name: "자유관A",
+          coords: [37.382683576045125, 126.6691958479459],
+          img: "/static/map_img/302.png",
+          info: {
+            office: "자유관A 1층 경비실",
+            time: "월~금 09:00~17:00",
+            phone: "032-749-3131",
+          },
+        },
+        301: {
+          name: "자유관B",
+          coords: [37.3834643374717, 126.66808021643931],
+          img: "/static/map_img/301.png",
+          info: {
+            office: "자유관B 1층 경비실",
+            time: "월~금 09:00~17:00",
+            phone: "032-749-3300",
+          },
+        },
+        510: {
+          name: "저에너지친환경실험주택",
+          coords: [37.38005045818827, 126.6700429389237],
+          img: "/static/map_img/510.png",
+          info: {
+            office: "경비실",
+            time: "월~금 09:00~17:00",
+          },
+        },
+        501: {
+          name: "종합관",
+          coords: [37.382286855360775, 126.66990470276706],
+          img: "/static/map_img/501.png",
+          info: {
+            office: "종합관 1층 경비실",
+            time: "월~금 09:00~17:00",
+            phone: "032-749-2118",
+          },
+        },
+        401: {
+          name: "진리관A",
+          coords: [37.38334132885237, 126.67081326999616],
+          img: "/static/map_img/401.png",
+          info: {
+            office: "진리관A 1층 경비실",
+            time: "월~금 09:00~17:00",
+          },
+        },
+        402: {
+          name: "진리관B",
+          coords: [37.382962779406405, 126.67157991126135],
+          img: "/static/map_img/402.png",
+          info: {
+            office: "진리관B 1층 경비실",
+            time: "월~금 09:00~17:00",
+          },
+        },
+        502: {
+          name: "진리관C",
+          coords: [37.38183522818802, 126.67031175217751],
+          img: "/static/map_img/502.png",
+          info: {
+            office: "진리관C 1층 경비실",
+            time: "월~금 09:00~17:00",
+          },
+        },
+        503: {
+          name: "진리관D",
+          coords: [37.38114903557426, 126.67142127822844],
+          img: "/static/map_img/503.png",
+          info: {
+            office: "진리관D 1층 경비실",
+            time: "월~금 09:00~17:00",
+          },
+        },
+      };
 
-            const infoPanel = document.getElementById('infoPanel');
-            const buildingDetails = document.getElementById('buildingDetails');
-            const mapDiv = document.getElementById('map');
+      const map = new naver.maps.Map("map", {
+        center: new naver.maps.LatLng(37.382, 126.6711),
+        zoom: 17,
+      });
 
-            for (const code in buildingData) {
-              const { name, coords, info,img } = buildingData[code];
-              const position = new naver.maps.LatLng(coords[0], coords[1]);
+      const infoPanel = document.getElementById("infoPanel");
+      const buildingDetails = document.getElementById("buildingDetails");
+      const mapDiv = document.getElementById("map");
 
-            const marker = new naver.maps.Marker({
-                position: position,
-                map,
-                title: name,
-                icon: {
-                  content:'<img src="/static/images/marker.png" style="width:50px; height:52px;">',
-                  size: new naver.maps.Size(50, 52),
-                  anchor: new naver.maps.Point(25, 52)
-                },
-               
-              });
+      for (const code in buildingData) {
+        const { name, coords, info, img } = buildingData[code];
+        const position = new naver.maps.LatLng(coords[0], coords[1]);
 
-              // Label marker
-              const markerLabel = new naver.maps.Marker({
-                position: position,
-                map: map,
-                icon: {
-                  content: `<div style="
+        const marker = new naver.maps.Marker({
+          position: position,
+          map,
+          title: name,
+          icon: {
+            content:
+              '<img src="/static/images/marker.png" style="width:50px; height:52px;">',
+            size: new naver.maps.Size(50, 52),
+            anchor: new naver.maps.Point(25, 52),
+          },
+        });
+
+        // Label marker
+        const markerLabel = new naver.maps.Marker({
+          position: position,
+          map: map,
+          icon: {
+            content: `<div style="
                     color: #053676;
                     background-color: white;
                     padding: 4px 8px;
@@ -214,15 +246,14 @@
                     transform:translateX(-50%);
                     ">
                     ${name}
-                  </div>`
-                },
-                anchor: new naver.maps.Point(25, 58),
-                clickable: false
-              });
-             
+                  </div>`,
+          },
+          anchor: new naver.maps.Point(25, 58),
+          clickable: false,
+        });
 
-            naver.maps.Event.addListener(marker, 'click', () => {
-            buildingDetails.innerHTML = `
+        naver.maps.Event.addListener(marker, "click", () => {
+          buildingDetails.innerHTML = `
               <h4 style="margin-bottom: 15px; color: #2c3e50; font-size: 24px;">${name}</h4>
               <div style="
                 width: 350px; 
@@ -255,10 +286,10 @@
               </div>
             `;
 
-      infoPanel.style.display = 'block';
-      mapDiv.classList.add('with-panel');
-      });
-    }
+          infoPanel.style.display = "block";
+          mapDiv.classList.add("with-panel");
+        });
+      }
     </script>
-    </body>
-   </html>
+  </body>
+</html>
