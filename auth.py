@@ -67,7 +67,7 @@ def login():
 
         if user and check_password_hash(user['password'], password):
             session['email'] = user['email']
-            return redirect(url_for('register_ko'))  
+            return redirect(url_for('index_ko'))  
         else:
             flash('이메일 또는 비밀번호가 올바르지 않습니다.')
             return redirect(url_for('auth_bp.login'))
