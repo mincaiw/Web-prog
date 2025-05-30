@@ -56,12 +56,11 @@ def index_ko():
     return render_template('ko/index_ko.html', user_email=user_email)
 
 
-
 @app.route('/ko/find')
 def find_ko():
-    return render_template('ko/find_ko.html')
+    user_email = session.get('email')  # Lấy email từ session
+    return render_template('ko/find_ko.html', user_email=user_email)
 
-@app.route('/ko/register')
 @app.route('/ko/register')
 def register_ko():
     user_email = session.get('email')  # Lấy email từ session

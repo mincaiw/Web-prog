@@ -28,13 +28,36 @@
             />
           </a>
         </div>
-
-        <!-- 언어 선택 -->
-        <ul class="gnb_lang">
-          <li><a href="{{ url_for('index_ko') }}">한국어</a></li>
-          <li><a href="{{ url_for('index_en') }}">ENGLISH</a></li>
+    
+            <ul>
+          <div class="user-info">
+          {% if user_email %} {{ user_email }} 님
+          <a href="{{ url_for('auth_bp.logout') }}">로그아웃</a>
+          </div>
+        </br>
+          <li>
+          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% else %}
+          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
+          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
+          <li><a href="{{ url_for('map_ko')}}">지도</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% endif %}
         </ul>
-      </div>
+
     </header>
 
     <main class="findList">
