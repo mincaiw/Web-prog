@@ -86,7 +86,6 @@ def register_item():
     start_ymd = request.form.get('START_YMD')
     prdt_nm = request.form.get('PRDT_NM')
     ubuilding = request.form.get('uBuilding')
-    description = request.form.get('description')
     image = request.files.get('itemImage')
 
     image_path = None
@@ -101,9 +100,9 @@ def register_item():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO found_items (prdt_cl_nm, start_ymd, prdt_nm, ubuilding, description, image_path)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (prdt_cl_nm, start_ymd, prdt_nm, ubuilding, description, image_path))
+        INSERT INTO found_items (prdt_cl_nm, start_ymd, prdt_nm, ubuilding, image_path)
+        VALUES (?, ?, ?, ?, ?)
+    """, (prdt_cl_nm, start_ymd, prdt_nm, ubuilding, image_path))
     conn.commit()
     conn.close()
 
