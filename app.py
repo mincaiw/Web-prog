@@ -89,9 +89,11 @@ def find_ko():
         "502": "진리관C",
         "503": "진리관D"
     }
+    
 
     for item in items:
         item['ubuilding'] = building_map.get(item['ubuilding'], item['ubuilding'])
+        item['image_path'] = item['image_path'].replace("static/", "").replace("\\", "/")
 
 
     return render_template('ko/find_ko.html', user_email=user_email,items=items)
