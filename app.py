@@ -112,10 +112,6 @@ def signup_ko():
 def map_ko():
     return render_template('ko/map_ko.html')
 
-@app.route('/ch')
-def index_ch():
-    return render_template('ch/index_ch.html')
-
 if __name__ == '__main__':
     app.run(debug=True)
 

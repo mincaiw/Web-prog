@@ -30,11 +30,11 @@
         <!-- Langugages -->
         <ul>
           <div class="user-info">
-          {% if user_email %} {{ user_email }} 님
-          <a href="{{ url_for('auth_bp.logout') }}">로그아웃</a>
+          {% if user_email %} 
+            {{ user_email }} 님
+            <a href="{{ url_for('auth_bp.logout') }}">로그아웃</a>
           </div>
-        </br>
-          <li>
+          <br/>
           <li><a href="{{ url_for('map_ko') }}">지도</a></li>
           <li>
             <a href="#" class="has-dropdown">Languages</a>
@@ -44,6 +44,7 @@
             </div>
           </li>
           {% else %}
+          </div>
           <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
           <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
           <li><a href="{{ url_for('map_ko')}}">지도</a></li>
@@ -56,6 +57,8 @@
           </li>
           {% endif %}
         </ul>
+
+
 
 
       <!-- Title -->
