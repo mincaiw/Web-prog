@@ -61,17 +61,13 @@
           </a>
         </div>
         
-        <!-- Langugages -->
-        <ul class="gnb_lang">
-            <li><a href="{{ url_for('index_ko') }}">한국어</a></li>
-            <li><a href="{{ url_for('index_en') }}">ENGLISH</a></li>
-        </ul>
     </div>
 
 <div class="findList">
 
     <div class="lost_qfind2">
         <h2>습득물을 등록해보세요!</h2>
+              {% if user_email %} 
     </br>
             <form method="POST" action="{{ url_for('auth_bp.register_item') }}" enctype="multipart/form-data">
             <div class="list">
