@@ -1,39 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>Yonsei Lost & Found</title>
     <!-- Chrome, Safari, IE -->
     <link
-      rel="shortcut icon"
-      href="static/images/기본형_심볼-01.jpg"
-      type="image/jpg"
+      rel="icon"
+      href="{{ url_for('static', filename='/images/기본형_심볼-01_cut.png') }}"
+      type="image/png"
     />
-    <link rel="icon" href="static/images/기본형_심볼-01.jpg" type="image/jpg" />
     <link rel="stylesheet" type="text/css" href="static/css/style.css" />
   </head>
 
   <body>
     <header>
       <div class="container">
+        <!-- Logo -->
         <div class="logo">
-          <img
-            src="/imges/기본형_심볼-03-removebg-preview.png"
-            alt="Yonsei"
-            style="width: 225px; height: auto"
-          />
+          <a href="{{ url_for('index_en') }}">
+            <img
+              src="static/images/기본형_심볼-03-removebg-preview.png"
+              alt="Yonsei"
+              style="width: 235px; height: auto"
+            />
+          </a>
         </div>
-        <div class="title">
-          <h2>Songdo Campus</h2>
-          <h1>Yonsei Lost & found</h1>
-        </div>
-        <ul class="gnb_lang">
-          <li><a href="{{ url_for('index_ko') }}">한국어</a></li>
-          <li><a href="{{ url_for('index_en') }}">ENGLISH</a></li>
-          <li><a href="{{ url_for('index_ch') }}">中文</a></li>
+
+        <!-- Langugages -->
+        <ul>
+          <div class="user-info">
+          {% if user_email %} 
+            {{ user_email }} 
+            <a href="{{ url_for('auth_bp.logout') }}">Log out</a>
+          </div>
+          <br/>
+          <li><a href="{{ url_for('map_en') }}">Map</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% else %}
+          </div>
+          <li><a href="{{ url_for('login_en') }}">Login</a></li>
+          <li><a href="{{ url_for('signup_en') }}">Signup</a></li>
+          <li><a href="{{ url_for('map_en')}}">Map</a></li>
+          <li>
+            <a href="#" class="has-dropdown">Languages</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">English</a>
+            </div>
+          </li>
+          {% endif %}
         </ul>
+
+
+
+
+      <!-- Title -->
+      <div class="title">
+        <h2> Songdo Campus </h2>
+        <h1> Yonsei Lost & Found </h1>
       </div>
 
+      <!-- Button -->
       <div class="buttons-container">
         <button id="button1">Registration of found items</button>
         <button id="button2">Search for found items</button>

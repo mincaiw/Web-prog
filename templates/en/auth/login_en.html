@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
@@ -7,7 +7,7 @@
     <!-- Chrome, Safari, IE -->
     <link
       rel="icon"
-      href="/static/images/기본형_심볼-01_cut.png"
+      href="static/images/기본형_심볼-01_cut.png"
       type="image/png"
     />
     <link rel="stylesheet" type="text/css" href="/static/css/style_auth.css" />
@@ -18,7 +18,7 @@
       <div class="container">
         <!-- Logo -->
         <div class="logo">
-          <a href="{{ url_for('index_ko') }}">
+          <a href="{{ url_for('index_en') }}">
             <img
               src="/static/images/기본형_심볼-03-removebg-preview.png"
               alt="Yonsei"
@@ -28,9 +28,9 @@
         </div>
 
         <ul>
-          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
-          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
-          <li><a href="{{ url_for('map_ko')}}">지도</a></li>
+          <li><a href="{{ url_for('login_en') }}">Login</a></li>
+          <li><a href="{{ url_for('signup_en') }}">Signup</a></li>
+          <li><a href="{{ url_for('map_en')}}">Map</a></li>
           <li>
             <a href="#" class="has-dropdown">Languages</a>
             <div class="language-dropdown">
@@ -44,21 +44,21 @@
 
     <div class="login-wrapper">
       <div class="login-card">
-        <h2>로그인</h2>
+        <h2>Login</h2>
 
         <form method="POST" action="{{ url_for('auth_bp.login') }}">
-          <label for="user_id">이메일</label>
+          <label for="user_id">Email</label>
           <input id="email" name="email" type="text" required />
 
-          <label for="password">비밀번호</label>
+          <label for="password">Password</label>
           <input id="password" name="password" type="password" required />
 
-          <button type="submit">로그인</button>
+          <button type="submit">Login</button>
         </form>
-        <p>아직 회원이 아니신가요? <a href="/ko/signup">회원가입</a></p>
+        <p>Don't have an account yet? <a href="/ko/signup">Sign up</a></p>
         <p>
-          비밀번호를 잊으셨나요?
-          <a href="{{ url_for('auth_bp.forgot_password') }}">비밀번호를 찾기</a>
+          Forgot your password?
+          <a href="{{ url_for('auth_bp.forgot_password') }}">Reset password</a>
         </p>
       </div>
     </div>

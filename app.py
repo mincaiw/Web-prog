@@ -52,6 +52,18 @@ def find_en():
 def register_en():
     return render_template('en/register_en.html')
 
+@app.route('/en/map')
+def map_en():
+    return render_template('en/map_en.html')
+
+@app.route('/en/login')
+def login_en():
+    return render_template('/en/auth/login_en.html')
+
+@app.route('/en/signup')
+def signup_en():
+    return render_template('en/auth/signup_en.html')
+
 # Korean page
 @app.route('/ko')
 def index_ko():
@@ -68,7 +80,6 @@ def index_ko():
             user_email = user[0]
 
     return render_template('ko/index_ko.html', user_email=user_email)
-
 
 @app.route('/ko/find')
 def find_ko():
