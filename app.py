@@ -42,11 +42,46 @@ def home():
 # English page
 @app.route('/en')
 def index_en():
-    return render_template('en/index_en.html')
+    user_email = session.get('email')    
+    
+    if 'user_id' in session:
+        conn = sqlite3.connect('users.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT email FROM users WHERE id = ?', (session['user_id'],))  # <-- FIXED HERE
+        user = cursor.fetchone()
+        conn.close()
+
+        if user:
+            user_email = user[0]
+            
+    return render_template('en/index_en.html', user_email=user_email)
 
 @app.route('/en/find')
 def find_en():
-    return render_template('en/find_en.html')
+    user_email = session.get('email')
+    items=get_found_items()
+
+    building_map = {
+        "101": "언더우드기념도서관",
+        "203": "운동장",
+        "305": "송도1학사",
+        "405": "송도2학사",
+        "302": "자유관A",
+        "301": "자유관B",
+        "510": "저에너지친환경실험주택",
+        "501": "종합관",
+        "401": "진리관A",
+        "402": "진리관B",
+        "502": "진리관C",
+        "503": "진리관D"
+    }
+    
+    for item in items:
+        item['ubuilding'] = building_map.get(item['ubuilding'], item['ubuilding'])
+        item['image_path'] = item['image_path'].replace("static/", "").replace("\\", "/")
+
+
+    return render_template('en/find_en.html', user_email=user_email,items=items)
 
 @app.route('/en/register')
 def register_en():
@@ -57,14 +92,32 @@ def register_en():
 def map_en():
     return render_template('en/map_en.html')
 
-@app.route('/en/login')
+@app.route('/en/login', methods=['GET','POST'])
 def login_en():
-    return render_template('/en/auth/login_en.html')
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        conn = sqlite3.connect('users.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
+        user = cursor.fetchone()
+        conn.close()
+        if user and user[3] == password:  
+            session['user'] = email  
+            return redirect(url_for('register_en'))
+        else:
+            flash('Login Failed: Incorrect Email or Password')
+            return redirect(url_for('login_en'))
+    return render_template('en/auth/login_en.html')
+
+@app.route('/logout')
+def logout_en():
+    session.pop('email', None)
+    return redirect(url_for('auth_bp.login_en'))
 
 @app.route('/en/signup')
 def signup_en():
-    user_email = session.get('email')
-    return render_template('en/auth/signup_en.html', user_email=user_email)
+    return render_template('ko/auth/signup_ko.html')
 
 # Korean page
 @app.route('/ko')
@@ -85,7 +138,7 @@ def index_ko():
 
 @app.route('/ko/find')
 def find_ko():
-    user_email = session.get('email')  # Lấy email từ session
+    user_email = session.get('email') 
     items=get_found_items()
 
     building_map = {
@@ -135,7 +188,7 @@ def login_ko():
     return render_template('ko/auth/login_ko.html')
 
 @app.route('/logout')
-def logout():
+def logout_ko():
     session.pop('email', None)
     return redirect(url_for('auth_bp.login_ko'))
 
