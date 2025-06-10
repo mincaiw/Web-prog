@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -16,7 +16,7 @@
       type="text/javascript"
       src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"
     ></script>
-    <title>연세대학교 국제캠퍼스 지도</title>
+    <title>Yonsei Songdo Campus Map</title>
     <style>
       html,
       body {
@@ -83,7 +83,7 @@
     <div id="container">
       <div id="infoPanel">
         <div class="logo">
-          <a href="{{ url_for('index_ko') }}">
+          <a href="{{ url_for('index_en') }}">
             <img
               src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
               alt="Yonsei"
@@ -91,65 +91,67 @@
             />
           </a>
         </div>
-        <h3>건물 정보</h3>
-        <div id="buildingDetails">마커를 클릭하면 정보가 표시됩니다.</div>
+        <h3>Buildings Info</h3>
+        <div id="buildingDetails">
+          Click the marker to display the information.
+        </div>
       </div>
       <div id="map"></div>
     </div>
     <script>
       const buildingData = {
         101: {
-          name: "언더우드기념도서관",
+          name: "Underwood Memorial Library (언더우드기념도서관)",
           coords: [37.382499674654284, 126.67110064169147],
           img: "/static/map_img/101.png",
           info: {
             office: "1층 이용자통합서비스데스크",
-            time: "월~금 09:00~17:00",
+            time: "Mon-Fri 09:00~17:00",
             phone: "032-749-3301",
           },
         },
         203: {
-          name: "운동장",
+          name: "YIC Field (운동장)",
           coords: [37.38505660284087, 126.67039362700353],
           img: "/static/map_img/203.png",
           info: {
             office: "송도2학사 D동 1층 경비실",
-            time: "월~금 09:00~17:00",
+            time: "Mon-Fri 09:00~17:00",
             phone: "032-749-5205",
           },
         },
         305: {
-          name: "송도1학사",
+          name: "Songdo Dormitory A/B/C (송도1학사)",
           coords: [37.38186484004004, 126.66721220250625],
           img: "/static/map_img/305.png",
           info: {
             office: "송도1학사 C동 1층 경비실",
-            time: "월~금 09:00~17:00",
+            time: "Mon-Fri 09:00~17:00",
             phone: "032-749-5105",
           },
         },
         405: {
-          name: "송도2학사",
+          name: "Songdo Dorimitory D/E/F/G (송도2학사)",
           coords: [37.38332087037019, 126.67236874521204],
           img: "/static/map_img/405.png",
           info: {
             office: "송도2학사 D동 1층 경비실",
-            time: "월~금 09:00~17:00",
+            time: "Mon-Fri 09:00~17:00",
             phone: "032-749-5205",
           },
         },
         302: {
-          name: "자유관A",
+          name: "Libertas Hall A (자유관A)",
           coords: [37.382683576045125, 126.6691958479459],
           img: "/static/map_img/302.png",
           info: {
             office: "자유관A 1층 경비실",
-            time: "월~금 09:00~17:00",
+            time: "Mon-Fri 09:00~17:00",
             phone: "032-749-3131",
           },
         },
         301: {
-          name: "자유관B",
+          name: "Libertas Hall B (자유관B)",
           coords: [37.3834643374717, 126.66808021643931],
           img: "/static/map_img/301.png",
           info: {

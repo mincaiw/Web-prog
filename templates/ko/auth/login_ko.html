@@ -7,7 +7,7 @@
     <!-- Chrome, Safari, IE -->
     <link
       rel="icon"
-      href="static/images/기본형_심볼-01_cut.png"
+      href="/static/images/기본형_심볼-01_cut.png"
       type="image/png"
     />
     <link rel="stylesheet" type="text/css" href="/static/css/style_auth.css" />
@@ -46,7 +46,7 @@
       <div class="login-card">
         <h2>로그인</h2>
 
-        <form method="POST" action="{{ url_for('auth_bp.login') }}">
+        <form method="POST" action="{{ url_for('auth_bp.login_ko') }}">
           <label for="user_id">이메일</label>
           <input id="email" name="email" type="text" required />
 
@@ -58,7 +58,9 @@
         <p>아직 회원이 아니신가요? <a href="/ko/signup">회원가입</a></p>
         <p>
           비밀번호를 잊으셨나요?
-          <a href="{{ url_for('auth_bp.forgot_password') }}">비밀번호를 찾기</a>
+          <a href="{{ url_for('auth_bp.forgot_password_ko') }}"
+            >비밀번호를 찾기</a
+          >
         </p>
       </div>
     </div>
