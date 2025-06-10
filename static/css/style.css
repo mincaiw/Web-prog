@@ -224,6 +224,11 @@ ul li a.active {
   font-size: 14px;
   font-weight: 300;
 }
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 body > footer {
   margin-top: auto;
 }
