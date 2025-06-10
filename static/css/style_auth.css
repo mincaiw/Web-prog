@@ -167,3 +167,44 @@ ul li a.active {
   color: #0040c0;
   text-decoration: none;
 }
+
+.footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 40px;
+  width: 100%;
+  margin-top: 60px;
+  position: relative;
+  bottom: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  height: 40px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.footer-right {
+  font-size: 14px;
+  font-weight: 300;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body > footer {
+  margin-top: auto;
+}
+
