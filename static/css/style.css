@@ -223,6 +223,10 @@ ul li a.active {
 .footer-right {
   font-size: 14px;
   font-weight: 300;
+  text-align: right;
+}
+.footer-right p {
+  margin: 2px 0; /* Optional: space between names */
 }
 body {
   min-height: 100vh;
