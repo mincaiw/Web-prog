@@ -32,7 +32,7 @@
           <div class="user-info">
           {% if user_email %} 
             {{ user_email }} 
-            <a href="{{ url_for('auth_bp.logout') }}">Log out</a>
+            <a href="{{ url_for('auth_bp.logout_en') }}">Log out</a>
           </div>
           <br/>
           <li><a href="{{ url_for('map_en') }}">Map</a></li>
@@ -57,8 +57,6 @@
           </li>
           {% endif %}
         </ul>
-
-
 
 
       <!-- Title -->
