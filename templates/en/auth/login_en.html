@@ -46,7 +46,7 @@
       <div class="login-card">
         <h2>Login</h2>
 
-        <form method="POST" action="{{ url_for('auth_bp.login') }}">
+        <form method="POST" action="{{ url_for('auth_bp.login_en') }}">
           <label for="user_id">Email</label>
           <input id="email" name="email" type="text" required />
 
@@ -55,10 +55,12 @@
 
           <button type="submit">Login</button>
         </form>
-        <p>Don't have an account yet? <a href="/ko/signup">Sign up</a></p>
+        <p>Don't have an account yet? <a href="/en/signup">Sign up</a></p>
         <p>
           Forgot your password?
-          <a href="{{ url_for('auth_bp.forgot_password') }}">Reset password</a>
+          <a href="{{ url_for('auth_bp.forgot_password_en') }}"
+            >Reset password</a
+          >
         </p>
       </div>
     </div>

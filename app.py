@@ -2,7 +2,7 @@ import sys, os, sqlite3
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "vendor"))
 
 from flask import Flask, render_template, request, redirect, url_for, flash  
-from flask_login import login_required, current_user, LoginManager
+# from flask_login import login_required, current_user, LoginManager
 from flask_cors import CORS
 from auth import auth_bp
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 NAVER_CLIENT_ID=os.getenv("udhwj5en73")
 NAVER_CLIENT_SECRET=os.getenv("gL2gWzBkk0bOSN8TnYdpbMRNDFVXPnDP5wdixzgM")
-from werkzeug.utils import secure_filename
+# from werkzeug.utils import secure_filename
 from flask import session
 
 def get_found_items():
@@ -50,7 +50,8 @@ def find_en():
 
 @app.route('/en/register')
 def register_en():
-    return render_template('en/register_en.html')
+    user_email = session.get('email')
+    return render_template('en/register_en.html', user_email=user_email)
 
 @app.route('/en/map')
 def map_en():
@@ -62,7 +63,8 @@ def login_en():
 
 @app.route('/en/signup')
 def signup_en():
-    return render_template('en/auth/signup_en.html')
+    user_email = session.get('email')
+    return render_template('en/auth/signup_en.html', user_email=user_email)
 
 # Korean page
 @app.route('/ko')
@@ -111,7 +113,7 @@ def find_ko():
 
 @app.route('/ko/register')
 def register_ko():
-    user_email = session.get('email')  # Lấy email từ session
+    user_email = session.get('email')
     return render_template('ko/register_ko.html', user_email=user_email)
 
 @app.route('/ko/login_ko', methods=['GET','POST'])
@@ -135,7 +137,7 @@ def login_ko():
 @app.route('/logout')
 def logout():
     session.pop('email', None)
-    return redirect(url_for('login_ko'))
+    return redirect(url_for('auth_bp.login_ko'))
 
 @app.route('/ko/signup')
 def signup_ko():
