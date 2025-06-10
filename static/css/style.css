@@ -252,7 +252,7 @@ html, body {
 .wrap-footer {
   background-color: rgba(0, 0, 0, 0.7);
   color: #fff;
-  padding: 10px 0;
+  padding: 0px 0px 10px 0px;
   position: relative;
   bottom: 0;
   width: 100%;
