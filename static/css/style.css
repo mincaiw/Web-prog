@@ -224,3 +224,6 @@ ul li a.active {
   font-size: 14px;
   font-weight: 300;
 }
+body > footer {
+  margin-top: auto;
+}
