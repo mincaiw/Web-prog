@@ -232,3 +232,26 @@ body {
 body > footer {
   margin-top: auto;
 }
+/* Make the page fill full height and use flex to push footer to bottom */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content wrapper takes all space above the footer */
+.wrapper {
+  flex: 1;
+}
+
+/* Footer styling */
+.wrap-footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
