@@ -12,7 +12,7 @@ load_dotenv()
 # Corrected variable names for os.getenv calls
 # Ensure these environment variables are set in your .env file
 NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
-NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
+NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET") # Ensure this is also set if needed elsewhere
 
 def get_found_items():
     conn = sqlite3.connect('instance/yonsei.db')
@@ -28,10 +28,10 @@ def get_found_items():
     return [dict(row) for row in rows]
 
 app = Flask(__name__, static_folder='static', template_folder='templates') # Explicitly set template_folder
-app.secret_key = 'yonsei_uni_140' # It's better to put this in .env as well
+app.secret_key = os.getenv("SECRET_KEY", "yonsei_uni_140_default_secret") # Use environment variable for secret key, provide default
 CORS(app)
 
-app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(auth_bp, url_prefix='/auth') # All auth routes are now under /auth
 
 # Before each request, determine the language based on the URL path
 @app.before_request
@@ -39,11 +39,17 @@ def set_language_for_g():
     # Default language is Korean
     g.lang = 'ko'
     # Check if the URL path starts with '/en'
-    if request.path.startswith('/en/'): # Use /en/ to distinguish from /en route directly
+    if request.path.startswith('/en/'):
         g.lang = 'en'
     # For the root path '/', redirect to the default language's index
-    if request.path == '/':
-        g.lang = 'ko' # Default for root route
+    # IMPORTANT: Ensure this logic correctly sets g.lang for ALL routes, including blueprint routes
+    elif request.path.startswith('/auth/ko/'):
+        g.lang = 'ko'
+    elif request.path.startswith('/auth/en/'):
+        g.lang = 'en'
+    # If it's the root path, always set to 'ko' and redirect (handled by home())
+    # Otherwise, g.lang will remain 'ko' by default if no '/en/' is found, which is fine.
+
 
 # Helper to get user email consistently from session
 def get_current_user_email():
@@ -59,7 +65,7 @@ def home():
 def index(lang_code):
     user_email = get_current_user_email()
     # Pass the determined language to the base template
-    return render_template('base.html', user_email=user_email, lang=lang_code)
+    return render_template('base.html', user_email=user_email, lang=lang_code, title="Home")
 
 @app.route('/<string:lang_code>/find')
 def find(lang_code):
@@ -100,55 +106,71 @@ def find(lang_code):
     building_map = building_map_ko if lang_code == 'ko' else building_map_en
     
     for item in items:
+        # Use .get() with a fallback to avoid KeyError if ubuilding code is not in map
         item['ubuilding'] = building_map.get(item['ubuilding'], item['ubuilding'])
-        item['image_path'] = item['image_path'].replace("static/", "").replace("\\", "/")
+        # Ensure image paths are correctly formatted for web access
+        if item['image_path']:
+            item['image_path'] = item['image_path'].replace("static/", "").replace("\\", "/")
 
-    return render_template('base.html', user_email=user_email, items=items, lang=lang_code)
+    return render_template('base.html', user_email=user_email, items=items, lang=lang_code, title="Find Items")
 
+# This route is for registering items (not user signup)
 @app.route('/<string:lang_code>/register')
 def register(lang_code):
     user_email = get_current_user_email()
-    return render_template('base.html', user_email=user_email, lang=lang_code)
+    return render_template('base.html', user_email=user_email, lang=lang_code, title="Register")
 
+# MODIFIED: Map route to pass Naver Client ID and render specific map template
 @app.route('/<string:lang_code>/map')
 def map(lang_code):
-    return render_template('base.html', lang=lang_code)
+    naver_client_id = os.getenv("NAVER_CLIENT_ID") # Get the client ID from environment
+    if lang_code == 'ko':
+        return render_template('ko/map_ko.html', lang=lang_code, title="연세대학교 국제캠퍼스 지도", naver_client_id=naver_client_id)
+    else: # English
+        return render_template('en/map_en.html', lang=lang_code, title="Yonsei University International Campus Map", naver_client_id=naver_client_id)
 
-@app.route('/<string:lang_code>/login', methods=['GET','POST'])
-def login(lang_code):
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+# REMOVED: Redundant login route (now handled by auth_bp)
+# @app.route('/<string:lang_code>/login', methods=['GET','POST'])
+# def login(lang_code):
+#     ... (removed content) ...
+
+# REMOVED: Redundant signup route (now handled by auth_bp)
+# @app.route('/<string:lang_code>/signup', methods=['GET', 'POST'])
+# def signup(lang_code):
+#     ... (removed content) ...
+
+# REMOVED: Redundant logout route (now handled by auth_bp)
+# @app.route('/<string:lang_code>/logout')
+# def app_logout(lang_code): # Renamed to app_logout to avoid conflict if both were active
+#     session.pop('email', None)
+#     return redirect(url_for('index', lang_code=lang_code))
+
+
+# Helper to initialize the user database if it doesn't exist
+def init_db():
+    conn = None
+    try:
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
-        user = cursor.fetchone()
-        conn.close()
-        if user and user[3] == password: # Assuming user[3] is the password
-            session['email'] = email # Store email in session for easy retrieval
-            # Redirect to the register page in the current language after successful login
-            return redirect(url_for('register', lang_code=lang_code))
-        else:
-            if lang_code == 'ko':
-                flash('로그인 실패: 이메일 또는 비밀번호가 올바르지 않습니다.')
-            else: # English
-                flash('Login Failed: Incorrect Email or Password')
-            # Assuming your login form is part of base.html or a separate template block
-            return render_template('base.html', lang=lang_code, show_login_form=True) # You might need a flag to show the form
-    # For GET request, render the login page
-    return render_template('base.html', lang=lang_code) # This assumes base.html can render the login form via a block or includes.
-
-@app.route('/<string:lang_code>/signup')
-def signup(lang_code):
-    # This route will also use base.html, assuming signup form is rendered via a block
-    return render_template('base.html', lang=lang_code)
-
-@app.route('/<string:lang_code>/logout')
-def logout(lang_code):
-    session.pop('email', None)
-    # Redirect to the index page in the current language after logout
-    return redirect(url_for('index', lang_code=lang_code))
-
+        # IMPORTANT: Ensure user_id and email are UNIQUE to prevent duplicates
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id TEXT NOT NULL UNIQUE,
+                email TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL,
+                reset_token TEXT,
+                token_expiration TEXT
+            )
+        ''')
+        conn.commit()
+        print("Database 'users.db' initialized/checked successfully.")
+    except sqlite3.Error as e:
+        print(f"Error initializing database: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 if __name__ == '__main__':
+    init_db() # Initialize the users database when the app starts
     app.run(debug=True)

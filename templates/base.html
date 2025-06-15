@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -20,12 +20,17 @@
       type="text/css"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    {% block head %}{% endblock %} {# Allows child templates to add extra head
+    content #}
   </head>
-  <body>
+  {# Add specific classes to body based on the current page for targeted styling
+  #}
+  <body
+    class="{% if request.endpoint == 'auth_bp.login' or request.endpoint == 'auth_bp.signup' %}auth-page{% endif %} {% if request.endpoint == 'map' %}map-page{% endif %}"
+  >
     <header class="main-header">
       <div class="header-container">
         <div class="logo">
-          {# Link to index page for the current language #}
           <a href="{{ url_for('index', lang_code=lang) }}">
             <img
               src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
@@ -41,18 +46,18 @@
               {{ user_email }}{% if lang == 'ko' %} 님{% endif %}
             </li>
             <li>
-              <a href="{{ url_for('logout', lang_code=lang) }}">
+              <a href="{{ url_for('auth_bp.logout', lang_code=lang) }}">
                 {% if lang == 'ko' %}로그아웃{% else %}Logout{% endif %}
               </a>
             </li>
             {% else %}
             <li>
-              <a href="{{ url_for('login', lang_code=lang) }}"
+              <a href="{{ url_for('auth_bp.login', lang_code=lang) }}"
                 >{% if lang == 'ko' %}로그인{% else %}Login{% endif %}</a
               >
             </li>
             <li>
-              <a href="{{ url_for('signup', lang_code=lang) }}"
+              <a href="{{ url_for('auth_bp.signup', lang_code=lang) }}"
                 >{% if lang == 'ko' %}회원가입{% else %}Sign Up{% endif %}</a
               >
             </li>
@@ -73,6 +78,7 @@
         </nav>
       </div>
     </header>
+
     {% if request.endpoint == 'index' %}
     <section class="hero-section">
       <div class="hero-content">
@@ -94,16 +100,12 @@
           </button>
         </div>
       </div>
-      <div class="hero-background-elements">
-        <div class="yonsei-wordmark">YONSEI</div>
-      </div>
     </section>
-    {% endif %} {% if request.endpoint != 'index' %}
-    <div class="page-wrapper">
-      <main class="page-main-content">
-        {% block main_content %}{% endblock %}
-      </main>
-    </div>
+    {% else %} {# For all other pages, including map and auth pages #} {# This
+    main element will take up remaining vertical space #}
+    <main style="flex-grow: 1; display: flex; flex-direction: column">
+      {% block main_content %}{% endblock %}
+    </main>
     {% endif %}
 
     <footer class="main-footer">
@@ -135,5 +137,24 @@
       });
     </script>
     {% endif %}
+    <script>
+      // Set header and footer heights for CSS variables dynamically
+      document.addEventListener("DOMContentLoaded", () => {
+        const header = document.querySelector(".main-header");
+        const footer = document.querySelector(".main-footer");
+        if (header) {
+          document.documentElement.style.setProperty(
+            "--header-height",
+            `${header.offsetHeight}px`
+          );
+        }
+        if (footer) {
+          document.documentElement.style.setProperty(
+            "--footer-height",
+            `${footer.offsetHeight}px`
+          );
+        }
+      });
+    </script>
   </body>
 </html>
