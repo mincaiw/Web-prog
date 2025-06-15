@@ -1,3 +1,23 @@
+/* General resets and fonts */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Noto Sans KR", sans-serif; /* Prefer Noto Sans KR for Korean content */
+}
+
+/* Body background for register page (inherits from base.html .auth-page) */
+body.find-page {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.43), rgba(0, 0, 0, 0.43)),
+    url(/static/images/main_page.jpeg);
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Fixed background */
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column; /* Ensure vertical stacking for flex-grow on main content */
+  min-height: 100vh;
+}
 /* General styling for find page */
 .find-page-container {
   padding: 40px 40px;
