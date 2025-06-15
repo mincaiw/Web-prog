@@ -57,7 +57,7 @@ body.auth-page {
 }
 
 .header-container {
-  max-width: 1450px;
+  max-width: 1980px;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
@@ -214,7 +214,7 @@ body.auth-page {
 }
 
 .hero-content h1 {
-  font-size: 4.5rem; /* Larger and more impactful */
+  font-size: 4rem; /* Larger and more impactful */
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 2.5rem;
