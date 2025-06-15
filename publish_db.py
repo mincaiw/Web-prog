@@ -15,6 +15,7 @@ cursor.execute('''
         ubuilding TEXT,
         image_path TEXT,
         user_id TEXT  
+        )
 ''')
 
 conn.commit()
