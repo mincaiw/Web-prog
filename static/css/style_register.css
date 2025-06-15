@@ -1,210 +1,184 @@
+/* General resets and fonts */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Noto Sans KR", sans-serif; /* Prefer Noto Sans KR for Korean content */
 }
 
-body {
+/* Body background for register page (inherits from base.html .auth-page) */
+body.register-page {
   background-image: linear-gradient(rgba(0, 0, 0, 0.43), rgba(0, 0, 0, 0.43)),
     url(/static/images/main_page.jpeg);
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed; /* Fixed background */
   background-position: center;
   background-size: cover;
-  background-attachment: fixed;
-}
-
-.container {
   display: flex;
-  border: 20px;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 0px;
+  flex-direction: column; /* Ensure vertical stacking for flex-grow on main content */
+  min-height: 100vh;
 }
 
-.logo {
-  margin-right: auto;
-  margin-left: 20px;
-}
-
-.findList {
+/* Wrapper for the register card to center it */
+.register-wrapper {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* Vertically center the card */
+  flex-grow: 1; /* Allows it to take available vertical space */
+  padding: 40px 20px; /* Add some padding around the card */
+  min-height: calc(
+    100vh - var(--header-height, 75px) - var(--footer-height, 100px)
+  ); /* Dynamic height */
+}
+
+/* Styles for the main registration card */
+.register-card {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.98
+  ); /* Slightly opaque white background */
+  padding: 40px; /* Generous padding */
+  border-radius: 15px; /* More pronounced rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Soft, prominent shadow */
   width: 100%;
-  margin: 0 auto;
-}
-
-.lost_qfind2 {
-  width: 100%;
-  max-width: 700px;
-  padding: 40px 30px;
-  background-color: rgba(255, 255, 255, 0.96);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  margin: 8%;
+  max-width: 1000px; /* Max width for larger forms */
   text-align: center;
+  animation: fadeInScale 0.6s ease-out; /* Subtle animation on load */
 }
 
-h1,
-h2 {
-  text-align: center;
-  color: #222;
-  font-size: 22px;
-  margin-bottom: 20px;
-  font-weight: 600;
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-label {
+.register-card h2 {
+  font-size: 2.2em; /* Larger, more inviting title */
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Form group for labels and inputs */
+.form-group {
+  margin-bottom: 25px; /* Increased space between form elements */
+  text-align: left; /* Align labels and inputs to the left */
+}
+
+.form-group label {
   display: block;
-  text-align: left;
   margin-bottom: 8px;
-  font-size: 15px;
+  font-size: 1.1em; /* Slightly larger labels */
   font-weight: 600;
-  color: #444;
+  color: #555;
 }
 
-.list {
-  width: 100%;
-  text-align: left;
-}
-
+/* Styling for text, date, and select inputs */
 input[type="text"],
 input[type="date"],
-input[type="file"],
 select {
   width: 100%;
-  padding: 10px 12px;
-  font-size: 14px;
-  margin-bottom: 25px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 14px 18px; /* Increased padding */
+  font-size: 1.05em;
+  border: 1px solid #ddd; /* Lighter border */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f8f8f8; /* Light background */
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06); /* Subtle inner shadow */
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus,
+input[type="file"]:focus {
+  /* Add focus for file input as well */
+  border-color: #667eea; /* Accent color on focus */
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25); /* Focus ring */
+  outline: none;
   background-color: #fff;
 }
 
-input[type="submit"] {
-  background-color: #005bac;
-  color: white;
-  font-weight: bold;
-  border: none;
-  padding: 12px 25px;
-  font-size: 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: block;
-  margin: 0 auto;
-  transition: background-color 0.3s ease;
-}
-
-input[type="submit"]:hover {
-  background-color: #003f87;
-}
-
-.logo {
-  margin-right: auto;
-  margin-left: 20px;
-}
-
-ul {
-  float: right;
-  list-style-type: none;
-  margin-top: 0px;
-  padding: 0px;
-  margin-right: 20px;
-}
-
-ul li {
-  display: inline-block;
-  margin-right: 10px;
-  position: relative;
-}
-
-ul li a {
-  position: relative;
-  text-decoration: none;
-  color: #000;
-  padding: 5px 20px;
-  border: 0px solid #000;
-  transition: 0.1s ease;
-  display: block;
-}
-
-ul li a:hover {
-  background-color: none;
-  color: #4169e1;
-}
-
-ul li a::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: #4169e1;
-  transition: width 0.3s ease;
-}
-
-ul li a:hover::after,
-ul li a.active::after {
+/* File input specific styling (can be tricky to style consistently) */
+input[type="file"] {
   width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+  font-size: 1em;
+  color: #555;
 }
 
-ul li a.active {
-  color: #4169e1;
+/* Submit button styling */
+.submit-button {
+  width: 100%;
+  padding: 15px; /* More padding for a larger button */
+  font-size: 1.2em; /* Larger text */
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(
+    45deg,
+    #667eea 0%,
+    #764ba2 100%
+  ); /* Gradient background */
+  color: #fff;
+  cursor: pointer;
+  margin-top: 30px; /* Space above button */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+  transition: all 0.3s ease;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
 }
 
-.language-dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-  min-width: 120px;
-  border-radius: 4px;
-  padding: 5px 0;
+.submit-button:hover {
+  transform: translateY(-3px); /* Lift effect */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+  background: linear-gradient(
+    45deg,
+    #764ba2 0%,
+    #667eea 100%
+  ); /* Reverse gradient */
 }
 
-.language-dropdown a {
-  padding: 8px 15px;
-  display: block;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.language-dropdown a:hover {
-  background-color: #f0f0f0;
-}
-
-.has-dropdown:hover + .language-dropdown {
-  display: block;
-}
-
-.language-item:hover .language-dropdown,
-.language-dropdown:hover {
-  display: block;
-}
-
-.login-notice {
-  padding: 20px;
-  margin: 20px auto;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
+/* Map specific styling */
+#map {
+  width: 100%;
+  height: 380px; /* Fixed height for consistency */
+  margin-top: 15px; /* Space above map */
   border: 1px solid #ccc;
-  font-family: "Noto Sans KR", sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden; /* Ensures map content stays within border-radius */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Flash messages styling (local to auth pages, inherited from style.css) */
+/* The .flashes class is defined in style.css and used in base.html and auth pages */
+/* No specific changes needed here unless you want different styling for register page flashes */
+
+/* Login notice for non-logged-in users (optional, if shown on this page) */
+.login-notice {
+  padding: 25px;
+  margin-top: 30px;
+  background-color: #f0f8ff; /* Light blue background */
+  border: 1px solid #cceeff; /* Blue border */
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .login-notice .login-message {
+  font-size: 1.1em;
   color: #333;
-  font-size: 15px;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
   font-weight: 500;
 }
 
@@ -212,44 +186,93 @@ a.login-btn {
   display: inline-block;
   background-color: #005bac;
   color: #fff !important;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none !important;
+  padding: 12px 25px;
+  border-radius: 8px;
+  text-decoration: none;
   font-weight: 600;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 a.login-btn:hover {
   background-color: #003f87;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
-#map {
-  width: 100%;
-  height: 380px;
-  margin-bottom: 30px;
-  border: 1px solid #aaa;
-  border-radius: 8px;
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .register-card {
+    padding: 30px 20px; /* Reduce padding on smaller screens */
+    border-radius: 10px;
+  }
+
+  .register-card h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  select,
+  input[type="file"] {
+    padding: 12px 15px;
+    font-size: 1em;
+  }
+
+  .submit-button {
+    padding: 13px;
+    font-size: 1.1em;
+    margin-top: 25px;
+  }
+
+  #map {
+    height: 300px; /* Smaller map on mobile */
+  }
 }
 
-.user-info {
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  font-family: "Noto Sans KR", "Pretendard", sans-serif;
-  color: #333;
-}
+@media (max-width: 480px) {
+  .register-wrapper {
+    padding: 20px 10px;
+  }
 
-.user-info a {
-  color: #005bac;
-  text-decoration: none;
-  font-weight: 600;
-}
+  .register-card {
+    padding: 25px 15px;
+  }
 
-.user-info a:hover {
-  text-decoration: underline;
+  .register-card h2 {
+    font-size: 1.5em;
+  }
+
+  .form-group label {
+    font-size: 1em;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  select,
+  input[type="file"] {
+    padding: 10px 12px;
+  }
+
+  .submit-button {
+    font-size: 1em;
+  }
+
+  .login-notice {
+    padding: 20px;
+  }
+
+  .login-notice .login-message {
+    font-size: 0.95em;
+  }
+
+  a.login-btn {
+    padding: 10px 20px;
+    font-size: 0.95em;
+  }
 }

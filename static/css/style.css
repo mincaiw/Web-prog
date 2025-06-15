@@ -59,7 +59,7 @@ body.auth-page {
 }
 
 .header-container {
-  max-width: 1800px; /* Adjusted from 1980px for better consistency */
+  max-width: 1700px; /* Adjusted from 1980px for better consistency */
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;

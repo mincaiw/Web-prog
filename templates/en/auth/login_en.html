@@ -1,32 +1,35 @@
-{% extends 'base.html' %} {% block title %} Login{% endblock %} {# Specific
-title for this page #} {% block head %} {{ super() }} {# No inline styles needed
-here anymore, as they are now in style.css #} {% endblock %} {% block
-main_content %}
+{% extends 'base.html' %} {% block title %}Login{% endblock %} {% block
+body_classes %}auth-page{% endblock %} {# Apply auth-page class to body #} {%
+block main_content %}
 <div class="login-wrapper">
   <div class="login-card">
     <h2>Login</h2>
-    {% with messages = get_flashed_messages() %} {% if messages %}
+    {# Local Flash Messages for this specific page (e.g., incorrect password,
+    logged out) #} {% with messages = get_flashed_messages(with_categories=true)
+    %} {% if messages %}
     <ul class="flashes">
-      {% for message in messages %}
-      <li>{{ message }}</li>
+      {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
       {% endfor %}
     </ul>
     {% endif %} {% endwith %}
+
     <form method="POST" action="{{ url_for('auth_bp.login', lang_code='en') }}">
-      <label for="email">Email</label>
+      <label for="email">Email:</label>
       <input type="email" id="email" name="email" required />
-      <label for="password">Password</label>
+
+      <label for="password">Password:</label>
       <input type="password" id="password" name="password" required />
+
       <button type="submit">Login</button>
     </form>
     <p>
-      Don't have an account yet?
+      Don't have an account?
       <a href="{{ url_for('auth_bp.signup', lang_code='en') }}">Sign Up</a>
     </p>
     <p>
-      Forgot your password?
-      <a href="{{ url_for('auth_bp.forgot_password_en', lang_code='en') }}"
-        >Reset Password</a
+      <a href="{{ url_for('auth_bp.forgot_password', lang_code='en') }}"
+        >Forgot password?</a
       >
     </p>
   </div>

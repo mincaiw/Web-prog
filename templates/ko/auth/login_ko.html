@@ -1,34 +1,37 @@
-{% extends 'base.html' %} {% block title %} 로그인{% endblock %} {# Specific
-title for this page #} {% block head %} {{ super() }} {% endblock %} {% block
-main_content %}
+{% extends 'base.html' %} {% block title %}로그인{% endblock %} {% block
+body_classes %}auth-page{% endblock %} {# Apply auth-page class to body #} {%
+block main_content %}
 <div class="login-wrapper">
   <div class="login-card">
     <h2>로그인</h2>
-    {% if messages %}
+    {# Local Flash Messages for this specific page (e.g., incorrect password,
+    logged out) #} {% with messages = get_flashed_messages(with_categories=true)
+    %} {% if messages %}
     <ul class="flashes">
-      {% for message in messages %}
-      <li>{{ message }}</li>
+      {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
       {% endfor %}
     </ul>
-    {% endif %}
+    {% endif %} {% endwith %}
+
     <form method="POST" action="{{ url_for('auth_bp.login', lang_code='ko') }}">
-      <label for="email">이메일</label>
+      <label for="email">이메일:</label>
       <input type="email" id="email" name="email" required />
-      <label for="password">비밀번호</label>
+
+      <label for="password">비밀번호:</label>
       <input type="password" id="password" name="password" required />
+
       <button type="submit">로그인</button>
     </form>
     <p>
-      아직 회원이 아니신가요?
+      계정이 없으신가요?
       <a href="{{ url_for('auth_bp.signup', lang_code='ko') }}">회원가입</a>
     </p>
     <p>
-      비밀번호를 잊으셨나요?
-      <a href="{{ url_for('auth_bp.forgot_password_ko', lang_code='ko') }}"
-        >비밀번호 찾기</a
+      <a href="{{ url_for('auth_bp.forgot_password', lang_code='ko') }}"
+        >비밀번호를 잊으셨나요?</a
       >
     </p>
-    {# Corrected URL for forgot password #}
   </div>
 </div>
 {% endblock %}

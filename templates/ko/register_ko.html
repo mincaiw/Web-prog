@@ -1,56 +1,101 @@
-{% extends 'base.html' %} {# IMPORTANT: Extend the base layout #} {% block title
-%}습득물 등록{% endblock %} {% block head %} {{ super() }} {% if messages %}
-<ul class="flashes">
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% if user_email %}
-<form
-  method="POST"
-  action="{{ url_for('auth_bp.register_item') }}"
-  enctype="multipart/form-data"
->
-  {{ csrf_token() }}
-  <div class="list">
-    <label for="PRDT_CL_NM">물품 카테고리:</label>
-    <input type="text" id="PRDT_CL_NM" name="PRDT_CL_NM" required />
+{% extends 'base.html' %} {% block title %}습득물 등록{% endblock %} {% block
+head %} {{ super() }}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='css/style_register.css') }}"
+/>
+<script
+  type="text/javascript"
+  src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"
+></script>
+{% endblock %} {% block body_classes %}register-page{% endblock %} {# Add a
+specific class for registration page body #} {% block main_content %}
+<div class="register-wrapper">
+  <div class="register-card">
+    <h2>습득물 등록</h2>
+    {# Local Flash Messages for this specific page #} {% with messages =
+    get_flashed_messages(with_categories=true) %} {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %} {% if user_email %}
+    <form
+      method="POST"
+      action="{{ url_for('auth_bp.register_item') }}"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <label for="PRDT_CL_NM">물품 카테고리:</label>
+        <input
+          type="text"
+          id="PRDT_CL_NM"
+          name="PRDT_CL_NM"
+          placeholder="예: 전자기기, 의류"
+          required
+        />
+      </div>
 
-    <label for="START_YMD">발견 시간:</label>
-    <input type="date" id="START_YMD" name="START_YMD" required />
+      <div class="form-group">
+        <label for="START_YMD">발견 시간:</label>
+        <input type="date" id="START_YMD" name="START_YMD" required />
+      </div>
 
-    <label for="PRDT_NM">물품명:</label>
-    <input type="text" id="PRDT_NM" name="PRDT_NM" required />
+      <div class="form-group">
+        <label for="PRDT_NM">물품명:</label>
+        <input
+          type="text"
+          id="PRDT_NM"
+          name="PRDT_NM"
+          placeholder="예: 스마트폰, 지갑"
+          required
+        />
+      </div>
 
-    <label for="uBuilding">발견 장소:</label>
-    <select name="uBuilding" id="uBuilding" required>
-      <option value="" disabled selected>건물 선택</option>
-      <option value="101">언더우드기념도서관</option>
-      <option value="203">운동장</option>
-      <option value="305">송도1학사</option>
-      <option value="405">송도2학사</option>
-      <option value="302">자유관A</option>
-      <option value="301">자유관B</option>
-      <option value="510">저에너지친환경실험주택</option>
-      <option value="501">종합관</option>
-      <option value="401">진리관A</option>
-      <option value="402">진리관B</option>
-      <option value="502">진리관C</option>
-      <option value="503">진리관D</option>
-    </select>
+      <div class="form-group">
+        <label for="uBuilding">발견 장소:</label>
+        <select name="uBuilding" id="uBuilding" required>
+          <option value="" disabled selected>건물 선택</option>
+          <option value="101">언더우드기념도서관</option>
+          <option value="203">운동장</option>
+          <option value="305">송도1학사</option>
+          <option value="405">송도2학사</option>
+          <option value="302">자유관A</option>
+          <option value="301">자유관B</option>
+          <option value="510">저에너지친환경실험주택</option>
+          <option value="501">종합관</option>
+          <option value="401">진리관A</option>
+          <option value="402">진리관B</option>
+          <option value="502">진리관C</option>
+          <option value="503">진리관D</option>
+        </select>
+      </div>
 
-    <div id="map"></div>
+      <div class="form-group map-container">
+        <label>지도에서 장소 확인:</label>
+        <div id="map"></div>
+        {# Naver Map will be initialized here #}
+      </div>
 
-    <label for="itemImage">사진:</label><br />
-    <input type="file" id="itemImage" name="itemImage" accept="image/*" />
-    <button type="submit">등록</button>
+      <div class="form-group">
+        <label for="itemImage">사진:</label>
+        <input type="file" id="itemImage" name="itemImage" accept="image/*" />
+      </div>
+
+      <button type="submit" class="submit-button">등록하기</button>
+    </form>
+    {% else %}
+    <div class="login-notice">
+      <p class="login-message">습득물 등록을 위해 로그인이 필요합니다.</p>
+      <a class="login-btn" href="{{ url_for('auth_bp.login', lang_code=lang) }}"
+        >로그인</a
+      >
+    </div>
+    {% endif %}
   </div>
-</form>
-{% else %}
-<a class="login-btn" href="{{ url_for('auth_bp.login', lang_code=lang) }}"
-  >로그인</a
->
-{% endif %}
+</div>
 
 <!-- 지도 연동 Script -->
 <script>
@@ -75,66 +120,77 @@
     503: { name: "진리관D", coords: [37.38114903557426, 126.67142127822844] },
   };
 
-  const defaultCenter = new naver.maps.LatLng(37.382, 126.6711394526905);
-  const map = new naver.maps.Map("map", {
-    center: defaultCenter,
-    zoom: 17,
-  });
+  // Check if Naver Maps API is loaded before initializing
+  if (typeof naver !== "undefined" && naver.maps) {
+    const defaultCenter = new naver.maps.LatLng(37.382, 126.6711394526905);
+    const map = new naver.maps.Map("map", {
+      center: defaultCenter,
+      zoom: 17,
+      mapTypeId: naver.maps.MapTypeId.NORMAL,
+      minZoom: 14,
+      maxZoom: 20,
+    });
 
-  const marker = new naver.maps.Marker({
-    map: map,
-    position: defaultCenter,
-    visible: false,
-  });
+    const marker = new naver.maps.Marker({
+      map: map,
+      position: defaultCenter,
+      visible: false,
+    });
 
-  const infoWindow = new naver.maps.InfoWindow({
-    content: "",
-    maxWidth: 200,
-    backgroundColor: "#fff",
-    borderColor: "#2db400",
-    borderWidth: 2,
-    anchorSize: new naver.maps.Size(20, 20),
-    anchorColor: "#fff",
-    pixelOffset: new naver.maps.Point(10, -10),
-  });
+    const infoWindow = new naver.maps.InfoWindow({
+      content: "",
+      maxWidth: 200,
+      backgroundColor: "#fff",
+      borderColor: "#2db400",
+      borderWidth: 2,
+      anchorSize: new naver.maps.Size(20, 20),
+      anchorColor: "#fff",
+      pixelOffset: new naver.maps.Point(10, -10),
+    });
 
-  document.getElementById("uBuilding").addEventListener("change", function () {
-    const selected = this.value;
-    if (selected === "") {
-      // Changed from "ALL" to empty string for initial required option
-      marker.setVisible(false);
-      infoWindow.close();
-      map.setCenter(defaultCenter); // Reset map to default center
-      map.setZoom(17); // Reset zoom
-    } else if (buildingLocations[selected]) {
-      const { name, coords } = buildingLocations[selected];
-      const latlng = new naver.maps.LatLng(coords[0], coords[1]);
+    document
+      .getElementById("uBuilding")
+      .addEventListener("change", function () {
+        const selected = this.value;
+        if (selected === "") {
+          marker.setVisible(false);
+          infoWindow.close();
+          map.setCenter(defaultCenter);
+          map.setZoom(17);
+        } else if (buildingLocations[selected]) {
+          const { name, coords } = buildingLocations[selected];
+          const latlng = new naver.maps.LatLng(coords[0], coords[1]);
 
-      map.setCenter(latlng);
-      marker.setPosition(latlng);
-      marker.setVisible(true);
+          map.setCenter(latlng);
+          marker.setPosition(latlng);
+          marker.setVisible(true);
 
-      infoWindow.setContent(
-        `<div style="padding:10px; font-size:14px;"><strong>${name}</strong></div>`
-      );
-      infoWindow.open(map, marker);
-    } else {
-      marker.setVisible(false);
-      infoWindow.close();
-    }
-  });
+          infoWindow.setContent(
+            `<div style="padding:10px; font-size:14px; font-weight:bold;">${name}</div>`
+          );
+          infoWindow.open(map, marker);
+        } else {
+          marker.setVisible(false);
+          infoWindow.close();
+        }
+      });
 
-  naver.maps.Event.addListener(marker, "click", function () {
-    if (infoWindow.getMap()) {
-      infoWindow.close();
-    } else {
-      infoWindow.open(map, marker);
-    }
-  });
+    naver.maps.Event.addListener(marker, "click", function () {
+      if (infoWindow.getMap()) {
+        infoWindow.close();
+      } else {
+        infoWindow.open(map, marker);
+      }
+    });
 
-  // Ensure map redraws when window size changes (important for responsive layouts)
-  window.addEventListener("resize", () => {
-    naver.maps.Event.trigger(map, "resize");
-  });
+    // Ensure map redraws when window size changes (important for responsive layouts)
+    window.addEventListener("resize", () => {
+      naver.maps.Event.trigger(map, "resize");
+    });
+  } else {
+    console.error("Naver Maps API not loaded.");
+    document.getElementById("map").innerHTML =
+      "<p>지도 로딩 실패: Naver Maps API를 불러올 수 없습니다.</p>";
+  }
 </script>
 {% endblock %}
