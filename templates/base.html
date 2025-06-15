@@ -1,59 +1,113 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{% block html_lang %}{{ lang | default('ko') }}{% endblock %}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Yonsei Lost & Found{% endblock %}</title>
-    <!-- link to global stylesheet -->
+    <title>{% block title %}Yonsei Lost &amp; Found{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/기본형_심볼-01_cut.png') }}"
+      type="image/png"
+    />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
       type="text/css"
+      href="{{ url_for('static', filename='css/style.css') }}"
     />
   </head>
   <body>
-    <!-- Header section -->
-    <header>
-      <div class="container">
-        <!-- Logo -->
+    <header class="main-header">
+      <div class="header-container">
         <div class="logo">
-          <a href="{{ url_for('index_ko') }}">
+          {# Link to index page for the current language #}
+          <a href="{{ url_for('index', lang_code=lang) }}">
             <img
               src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
-              alt="Yonsei"
+              alt="Yonsei University"
             />
           </a>
         </div>
 
-        <!-- Navigation menu -->
-        <ul class="nav">
-          <div class="user-info">
-            {% if user_email %} {{ user_email }} 님
-            <a href="{{ url_for('auth_bp.logout_ko') }}">로그아웃</a>
+        <nav class="main-nav">
+          <ul>
+            {% if user_email %}
+            <li class="user-info-display">
+              {{ user_email }}{% if lang == 'ko' %} 님{% endif %}
+            </li>
+            <li>
+              <a href="{{ url_for('logout', lang_code=lang) }}">
+                {% if lang == 'ko' %}로그아웃{% else %}Logout{% endif %}
+              </a>
+            </li>
+            {% else %}
+            <li>
+              <a href="{{ url_for('login', lang_code=lang) }}"
+                >{% if lang == 'ko' %}로그인{% else %}Login{% endif %}</a
+              >
+            </li>
+            <li>
+              <a href="{{ url_for('signup', lang_code=lang) }}"
+                >{% if lang == 'ko' %}회원가입{% else %}Sign Up{% endif %}</a
+              >
+            </li>
             {% endif %}
-          </div>
-          {% if not user_email %}
-          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
-          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
-          {% endif %}
-          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
-          <li class="has-dropdown">
-            <a href="#">언어</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">영어</a>
-            </div>
-          </li>
-        </ul>
+            <li>
+              <a href="{{ url_for('map', lang_code=lang) }}"
+                >{% if lang == 'ko' %}지도{% else %}Map{% endif %}</a
+              >
+            </li>
+            <li class="language-selector">
+              <a href="#" class="has-dropdown">Languages</a>
+              <div class="language-dropdown">
+                <a href="{{ url_for('index', lang_code='ko') }}">한국어</a>
+                <a href="{{ url_for('index', lang_code='en') }}">English</a>
+              </div>
+            </li>
+          </ul>
+        </nav>
       </div>
     </header>
+    {% if request.endpoint == 'index' %}
+    <section class="hero-section">
+      <div class="hero-content">
+        <h2>
+          {% if lang == 'ko' %}송도 캠퍼스{% else %}Songdo Campus{% endif %}
+        </h2>
+        <h1>
+          {% if lang == 'ko' %}연세대학교 유실물 통합포털{% else %}Yonsei
+          University Lost & Found Portal{% endif %}
+        </h1>
+        <div class="hero-buttons-container">
+          <button id="button1">
+            {% if lang == 'ko' %}습득물 등록{% else %}Register Found Item{%
+            endif %}
+          </button>
+          <button id="button2">
+            {% if lang == 'ko' %}습득물 검색{% else %}Search Found Items{% endif
+            %}
+          </button>
+        </div>
+      </div>
+      <div class="hero-background-elements">
+        <div class="yonsei-wordmark">YONSEI</div>
+      </div>
+    </section>
+    {% endif %} {% if request.endpoint != 'index' %}
+    <div class="page-wrapper">
+      <main class="page-main-content">
+        {% block main_content %}{% endblock %}
+      </main>
+    </div>
+    {% endif %}
 
-    <!-- Main content area -->
-    <main>{% block content %}{% endblock %}</main>
-
-    <!-- Footer section -->
-    <footer class="footer">
-      <div class="footer-content">
+    <footer class="main-footer">
+      <div class="footer-content-wrapper">
         <div class="footer-left">
           <img
             src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
@@ -68,5 +122,18 @@
         </div>
       </div>
     </footer>
+
+    {% if request.endpoint == 'index' %}
+    <script>
+      var button1 = document.getElementById("button1");
+      var button2 = document.getElementById("button2");
+      button1.addEventListener("click", function () {
+        window.location.href = "{{ url_for('register', lang_code=lang) }}";
+      });
+      button2.addEventListener("click", function () {
+        window.location.href = "{{ url_for('find', lang_code=lang) }}";
+      });
+    </script>
+    {% endif %}
   </body>
 </html>

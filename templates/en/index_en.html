@@ -1,89 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="utf-8" />
-    <title>Yonsei Lost & Found</title>
-    <!-- Chrome, Safari, IE -->
-    <link
-      rel="icon"
-      href="{{ url_for('static', filename='/images/기본형_심볼-01_cut.png') }}"
-      type="image/png"
-    />
-    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
-  </head>
-
-  <body>
-    <header>
-      <div class="container">
-        <!-- Logo -->
-        <div class="logo">
-          <a href="{{ url_for('index_en') }}">
-            <img
-              src="static/images/기본형_심볼-03-removebg-preview.png"
-              alt="Yonsei"
-              style="width: 235px; height: auto"
-            />
-          </a>
-        </div>
-
-        <!-- Langugages -->
-        <ul>
-          <div class="user-info">
-          {% if user_email %} 
-            {{ user_email }} 
-            <a href="{{ url_for('auth_bp.logout_en') }}">Log out</a>
-          </div>
-          <br/>
-          <li><a href="{{ url_for('map_en') }}">Map</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% else %}
-          </div>
-          <li><a href="{{ url_for('login_en') }}">Login</a></li>
-          <li><a href="{{ url_for('signup_en') }}">Signup</a></li>
-          <li><a href="{{ url_for('map_en')}}">Map</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
-
-
-      <!-- Title -->
-      <div class="title">
-        <h2> Songdo Campus </h2>
-        <h1> Yonsei Lost & Found </h1>
-      </div>
-
-      <!-- Button -->
-      <div class="buttons-container">
-        <button id="button1">Registration of found items</button>
-        <button id="button2">Search for found items</button>
-      </div>
-    </header>
-
-    <!-- Button href -->
-    <script>
-      var button1 = document.getElementById("button1");
-      var button2 = document.getElementById("button2");
-
-      button1.addEventListener("click", function () {
-        window.location.href = "{{ url_for('register_en') }}";
-      });
-
-      button2.addEventListener("click", function () {
-        window.location.href = "{{ url_for('find_en') }}";
-      });
-    </script>
-  </body>
-</html>
+{# templates/en/index_en.html #} {% extends 'base.html' %} {% block title
+%}Songdo Campus — Yonsei Lost & Found{% endblock %} {% block hero %}
+<!-- Page title & buttons go into the header hero area -->
+<div class="title">
+  <h2>Songdo Campus</h2>
+  <h1>Yonsei Lost & Found</h1>
+</div>
+<div class="buttons-container">
+  <button id="button1">Registration of found items</button>
+  <button id="button2">Search for found items</button>
+</div>
+{% endblock %} {% block content %}
+<!-- 如果有其他正文内容，放这里 -->
+<script>
+  document.getElementById("button1").addEventListener("click", function () {
+    window.location.href = "{{ url_for('register_en') }}";
+  });
+  document.getElementById("button2").addEventListener("click", function () {
+    window.location.href = "{{ url_for('find_en') }}";
+  });
+</script>
+{% endblock %}

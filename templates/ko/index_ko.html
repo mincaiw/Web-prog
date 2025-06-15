@@ -1,24 +1,7 @@
-{% extends 'base.html' %} {% block title %}송도 캠퍼스 — 연세대학교 유실물
-통합포털{% endblock %} {% block content %}
-<!-- Page title section -->
-<div class="title">
-  <h2>송도 캠퍼스</h2>
-  <h1>연세대학교 유실물 통합포털</h1>
-</div>
-
-<!-- Action buttons -->
-<div class="buttons-container">
-  <button id="button1">습득물 등록</button>
-  <button id="button2">습득물 검색</button>
-</div>
-
-<!-- Button click script -->
-<script>
-  document.getElementById("button1").addEventListener("click", function () {
-    window.location.href = "{{ url_for('register_ko') }}";
-  });
-  document.getElementById("button2").addEventListener("click", function () {
-    window.location.href = "{{ url_for('find_ko') }}";
-  });
-</script>
-{% endblock %}
+{% extends 'base.html' %} {% block title %} {% if lang == 'ko' %} 연세대학교
+유실물 통합포털 {% else %} Yonsei University Lost & Found Portal {% endif %} {%
+endblock %} {% block html_lang %} {{ lang }} {% endblock %} {# Set dynamic lang
+attribute for html tag #} {% block main_content %} {# On the index page, this
+block is typically empty now as main visual elements are in base.html's
+hero-section. If you have any content *below* the hero section that is unique to
+the index page, place it here. #} {% endblock %}

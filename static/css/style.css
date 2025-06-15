@@ -1,259 +1,506 @@
+/* General Resets and Base Styles */
+:root {
+  --yonsei-blue: #0056b3; /* Primary brand color */
+  --yonsei-accent: #4169e1; /* Secondary blue */
+  --text-dark: #333;
+  --text-light: #f4f4f4;
+  --header-bg: rgba(255, 255, 255, 0.98);
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --border-radius-soft: 8px;
+  --transition-speed: 0.3s;
+
+  /* NEW: Define approximate header and footer heights for calculation */
+  --header-height-approx: 75px; /* Adjust this based on your actual header height */
+  --footer-height-approx: 100px; /* Adjust this based on your actual footer height */
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Noto Sans", sans-serif;
 }
 
-link[rel="icon"] {
-  width: auto;
-  height: auto;
+html {
+  scroll-behavior: smooth;
+  font-size: 16px; /* Base font size for better rem calculations */
+  height: 100%; /* Ensure html takes full height */
 }
 
 body {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.43), rgba(0, 0, 0, 0.43)),
-    url(/static/images/main_page.jpeg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
-  background-size: cover;
-}
-
-.container {
+  font-family: "Montserrat", "Noto Sans KR", sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  min-height: 100vh; /* Body at least full viewport height */
   display: flex;
-  border: 20px;
+  flex-direction: column; /* Stacks children vertically */
+}
+
+/* Header Styles */
+.main-header {
+  background-color: var(--header-bg);
+  box-shadow: var(--shadow-light);
+  padding: 3px 0;
+  z-index: 1000;
+  position: relative;
+  flex-shrink: 0; /* Prevent header from shrinking */
+  /* If you want to be precise, set a fixed height here and use it in calc() */
+  /* height: var(--header-height-approx); */
+}
+
+.header-container {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 0px;
 }
 
-.logo {
-  margin-right: auto;
-  margin-left: 20px;
+.logo img {
+  width: 200px;
+  height: auto;
+  transition: transform var(--transition-speed) ease;
 }
 
-ul {
-  float: right;
-  list-style-type: none;
-  margin-top: 0px;
-  padding: 0px;
-  margin-right: 20px;
+.logo a:hover img {
+  transform: scale(1.05);
 }
 
-ul li {
-  display: inline-block;
-  margin-right: 10px;
+/* Navigation Menu (ul) */
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.main-nav ul li {
   position: relative;
 }
 
-ul li a {
-  position: relative;
+.main-nav ul li a {
   text-decoration: none;
-  color: #000;
-  padding: 5px 20px;
-  border: 0px solid #000;
-  transition: 0.1s ease;
+  color: var(--text-dark);
+  font-weight: 600;
+  padding: 0.5rem 0.8rem;
+  transition: color var(--transition-speed) ease, transform 0.2s ease;
   display: block;
 }
 
-ul li a:hover {
-  background-color: none;
-  color: #4169e1;
+.main-nav ul li a:hover {
+  color: var(--yonsei-blue);
+  transform: translateY(-2px);
 }
 
-ul li a::after {
+/* Underline effect on hover/active */
+.main-nav ul li a::after {
   content: "";
   position: absolute;
   width: 0;
   height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: #4169e1;
-  transition: width 0.3s ease;
+  background-color: var(--yonsei-blue);
+  bottom: -0.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: width var(--transition-speed) ease;
 }
 
-ul li a:hover::after,
-ul li a.active::after {
-  width: 100%;
+.main-nav ul li a:hover::after,
+.main-nav ul li a.active::after {
+  width: calc(100% - 1.6rem);
 }
 
-ul li a.active {
-  color: #4169e1;
-}
-
+/* Language Dropdown */
 .language-dropdown {
   display: none;
   position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-  min-width: 120px;
-  border-radius: 4px;
-  padding: 5px 0;
+  top: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  box-shadow: var(--shadow-medium);
+  border-radius: var(--border-radius-soft);
+  overflow: hidden;
+  min-width: 140px;
+  z-index: 101;
 }
 
 .language-dropdown a {
-  padding: 8px 15px;
-  display: block;
-  text-align: left;
+  padding: 0.8rem 1.2rem;
+  color: var(--text-dark);
+  font-weight: 400;
   white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: block;
 }
 
 .language-dropdown a:hover {
-  background-color: #f0f0f0;
+  background-color: #e6f0fa;
+  color: var(--yonsei-blue);
 }
 
-.has-dropdown:hover + .language-dropdown {
-  display: block;
-}
-
-.language-item:hover .language-dropdown,
+.language-selector:hover .language-dropdown,
 .language-dropdown:hover {
   display: block;
 }
 
-.title,
-.buttons-container {
+/* User Info Section */
+.user-info-display {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+}
+
+.user-info-display a {
+  color: var(--yonsei-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-speed) ease;
+}
+
+.user-info-display a:hover {
+  color: var(--yonsei-accent);
+  text-decoration: underline;
+}
+
+/* Hero Section (Main landing page content) */
+.hero-section {
+  position: relative;
+  flex-grow: 1; /* Allows it to grow and take available space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--text-light);
+  overflow: hidden; /* To contain mascots and wordmark */
+
+  /* Background image with overlay */
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("/static/images/main_page.jpeg") no-repeat center center;
+  background-size: cover; /* Ensures the background image covers the element */
+  background-position: center center; /* Ensures the image is centered */
+
+  /* THE KEY CHANGE: Calculate minimum height for hero-section */
+  /* This ensures it fills the remaining viewport space after header and footer */
+  min-height: calc(100vh - var(--header-height-approx));
+}
+
+.hero-content {
+  z-index: 20; /* Above background elements */
+  padding: 2rem;
+  max-width: 900px;
   width: 100%;
-  text-align: center;
 }
 
-.title {
+.hero-content h2 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-bottom: 0.8rem;
+  opacity: 0.9;
+  letter-spacing: 0.05em;
+}
+
+.hero-content h1 {
+  font-size: 4.5rem; /* Larger and more impactful */
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hero-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.hero-buttons-container button {
+  background-color: rgba(255, 255, 255, 0.15); /* More subtle background */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Lighter border */
+  color: var(--text-light);
+  padding: 1.2rem 2.8rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 35px; /* More rounded */
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  backdrop-filter: blur(5px); /* Frosted glass effect */
+  -webkit-backdrop-filter: blur(5px); /* For Safari */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hero-buttons-container button:hover {
+  background-color: var(--yonsei-accent); /* Royal blue on hover */
+  border-color: var(--yonsei-accent);
+  transform: scale(1.05) translateY(-5px); /* Lift and grow slightly */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Enhanced shadow on hover */
+}
+
+/* Hero Background Elements (Mascots, YONSEI wordmark) */
+.hero-background-elements {
   position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none; /* Allows clicks to pass through */
+  overflow: hidden;
 }
 
-.title h1 {
-  color: #fff;
-  font-size: 60px;
-  font-family: "Noto sans", sans-serif;
-  text-align: center;
+.hero-background-elements .mascot-left {
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  width: 280px;
+  transform: translateX(-50%);
+  z-index: 10;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
 }
 
-.title h2 {
-  padding: 10px;
-  color: #fff;
-  font-size: 20px;
-  font-weight: 100;
-  text-align: center;
+.hero-background-elements .mascot-right {
+  position: absolute;
+  bottom: 0;
+  right: 5%;
+  width: 280px;
+  transform: translateX(50%) scaleX(-1);
+  z-index: 10;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
 }
 
-.buttons-container {
-  list-style-type: none;
-  text-align: center;
+.hero-background-elements .yonsei-wordmark {
   position: absolute;
   top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 15vw;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+  overflow: hidden;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+  z-index: 1;
+  letter-spacing: 0.05em;
 }
 
-#button1,
-#button2 {
-  display: inline-block;
-  background-color: rgba(255, 255, 255, 0.2);
-  text-decoration: none;
-  color: #fff;
-  padding: 10px 20px;
-  border: 1px solid #fff;
-  transition: 0.1s ease;
-  font-size: large;
-  margin: 0 50px;
-  transform: scale(1.2);
-}
-
-#button1:hover,
-#button2:hover {
-  background-color: #4169e1;
-  color: #fff;
-}
-
-.user-info {
-  position: absolute;
-  top: 20px;
-  right: 40px;
+/* Page Wrapper for general content (map, find, register etc.) */
+/* This ensures other pages also have their main content area stretch */
+.page-wrapper {
+  flex-grow: 1; /* Takes up remaining vertical space when hero-section is NOT active */
+  background-color: #fcfcfc;
+  padding: 3rem 0;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  font-family: "Noto Sans KR", "Pretendard", sans-serif;
-  color: #333;
+  flex-direction: column;
 }
 
-.user-info a {
-  color: #005bac;
-  text-decoration: none;
-  font-weight: 600;
+.page-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  min-height: 50vh; /* Keep this to ensure content area has some height even if content is minimal */
 }
 
-.user-info a:hover {
-  text-decoration: underline;
-}
-.footer {
-  background-color: #000;
-  color: #fff;
-  padding: 20px 40px;
-  width: 100%;
-  margin-top: 60px;
-  position: relative;
-  bottom: 0;
-  font-family: 'Arial', sans-serif;
+/* Footer Styles */
+.main-footer {
+  background-color: #1a1a1a;
+  color: var(--text-light);
+  padding: auto 0;
+  font-size: 0.65rem;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  /* If you want to be precise, set a fixed height here and use it in calc() */
+  /* height: var(--footer-height-approx); */
 }
 
-.footer-content {
+.footer-content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 50px;
-  gap:30px;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .footer-logo {
-  height: 70px;
-  width: auto;
+  height: 60px;
   filter: brightness(0) invert(1);
 }
 
 .footer-right {
-  font-size: 14px;
-  font-weight: 300;
   text-align: right;
-}
-.footer-right p {
-  margin: 2px 0; /* Optional: space between names */
-}
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-body > footer {
-  margin-top: auto;
-}
-/* Make the page fill full height and use flex to push footer to bottom */
-html, body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+  line-height: 1.5;
 }
 
-/* Content wrapper takes all space above the footer */
-.wrapper {
-  flex: 1;
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+  .header-container,
+  .footer-content-wrapper,
+  .page-main-content {
+    padding: 0 1.5rem;
+  }
+
+  .logo img {
+    width: 150px;
+  }
+
+  .main-nav ul {
+    gap: 1rem;
+  }
+
+  .main-nav ul li a {
+    padding: 0.4rem 0.6rem;
+  }
+
+  .hero-content h1 {
+    font-size: 3.5rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .hero-buttons-container {
+    gap: 1.5rem;
+  }
+
+  .hero-buttons-container button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+
+  .hero-background-elements .mascot-left,
+  .hero-background-elements .mascot-right {
+    width: 220px;
+  }
+
+  .hero-background-elements .yonsei-wordmark {
+    font-size: 12vw;
+  }
 }
 
-/* Footer styling */
-.wrap-footer {
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  padding: 0px 0px 0px 0px;
-  position: relative;
-  bottom: 0;
-  width: 100%;
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .main-nav ul {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .user-info-display {
+    margin-bottom: 0.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .hero-section {
+    padding: 1rem;
+    /* Adjust min-height calc for smaller screens if header/footer change size significantly */
+    min-height: calc(
+      100vh - var(--header-height-approx) - var(--footer-height-approx)
+    ); /* Re-apply or adjust for media query */
+  }
+
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .hero-buttons-container {
+    flex-direction: column;
+    gap: 1rem;
+    width: 80%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+  .hero-buttons-container button {
+    width: 100%;
+  }
+
+  .hero-background-elements .mascot-left,
+  .hero-background-elements .mascot-right {
+    width: 180px;
+  }
+
+  .hero-background-elements .yonsei-wordmark {
+    font-size: 10vw;
+  }
+
+  .footer-content-wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-right {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container,
+  .footer-content-wrapper,
+  .page-main-content {
+    padding: 0 1rem;
+  }
+
+  .logo img {
+    width: 100px;
+  }
+
+  .main-nav ul {
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .main-nav ul li a {
+    padding: 0.2rem 0.4rem;
+  }
+
+  .language-dropdown {
+    min-width: 100px;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1rem;
+  }
+
+  .hero-buttons-container {
+    gap: 0.8rem;
+  }
+
+  .hero-buttons-container button {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .hero-background-elements .mascot-left,
+  .hero-background-elements .mascot-right {
+    width: 120px;
+  }
+
+  .hero-background-elements .yonsei-wordmark {
+    font-size: 8vw;
+  }
 }
