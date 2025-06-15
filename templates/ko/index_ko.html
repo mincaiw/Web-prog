@@ -1,111 +1,24 @@
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="utf-8" />
-    <title>Yonsei Lost & Found</title>
-    <!-- Chrome, Safari, IE -->
-    <link
-      rel="icon"
-      href="{{ url_for('static', filename='/images/기본형_심볼-01_cut.png') }}"
-      type="image/png"
-    />
-    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
-  </head>
+{% extends 'base.html' %} {% block title %}송도 캠퍼스 — 연세대학교 유실물
+통합포털{% endblock %} {% block content %}
+<!-- Page title section -->
+<div class="title">
+  <h2>송도 캠퍼스</h2>
+  <h1>연세대학교 유실물 통합포털</h1>
+</div>
 
-  <body>
-    <div class="wrapper">
-    <header>
-      <div class="container">
-        <!-- Logo -->
-        <div class="logo">
-          <a href="{{ url_for('index_ko') }}">
-            <img
-              src="static/images/기본형_심볼-03-removebg-preview.png"
-              alt="Yonsei"
-              style="width: 235px; height: auto"
-            />
-          </a>
-        </div>
+<!-- Action buttons -->
+<div class="buttons-container">
+  <button id="button1">습득물 등록</button>
+  <button id="button2">습득물 검색</button>
+</div>
 
-        <!-- Langugages -->
-        <ul>
-          <div class="user-info">
-          {% if user_email %} 
-            {{ user_email }} 님
-            <a href="{{ url_for('auth_bp.logout_ko') }}">로그아웃</a>
-          </div>
-          <br/>
-          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% else %}
-          </div>
-          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
-          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
-          <li><a href="{{ url_for('map_ko')}}">지도</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
-
-
-
-
-      <!-- Title -->
-      <div class="title">
-        <h2>송도 캠퍼스</h2>
-        <h1>연세대학교 유실물 통합포털</h1>
-      </div>
-
-      <!-- Button -->
-      <div class="buttons-container">
-        <button id="button1">습득물 등록</button>
-        <button id="button2">습득물 검색</button>
-      </div>
-    
-    </header>
-
-    <!-- Button href -->
-    <script>
-      var button1 = document.getElementById("button1");
-      var button2 = document.getElementById("button2");
-
-      button1.addEventListener("click", function () {
-        window.location.href = "{{ url_for('register_ko') }}";
-      });
-
-      button2.addEventListener("click", function () {
-        window.location.href = "{{ url_for('find_ko') }}";
-      });
-    </script>
-    </div>
-    <footer class="wrap-footer">
-    <div class="footer-content">
-      <div class="footer-left">
-        <img
-          src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
-          alt="Yonsei Logo"
-          class="footer-logo"
-        />
-      </div>
-      <div class="footer-right">
-        <p>Wang Mincai</p>
-        <p>Phan Ha Linh Vo</p>
-        <p>Vu Thuy Anh Dinh</p>
-      </div>
-    </div>
-  </footer>
-
-  </body>
-  </html>
+<!-- Button click script -->
+<script>
+  document.getElementById("button1").addEventListener("click", function () {
+    window.location.href = "{{ url_for('register_ko') }}";
+  });
+  document.getElementById("button2").addEventListener("click", function () {
+    window.location.href = "{{ url_for('find_ko') }}";
+  });
+</script>
+{% endblock %}

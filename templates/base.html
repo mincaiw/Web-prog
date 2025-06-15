@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Yonsei Lost & Found{% endblock %}</title>
+    <!-- link to global stylesheet -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <!-- Header section -->
+    <header>
+      <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+          <a href="{{ url_for('index_ko') }}">
+            <img
+              src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
+              alt="Yonsei"
+            />
+          </a>
+        </div>
+
+        <!-- Navigation menu -->
+        <ul class="nav">
+          <div class="user-info">
+            {% if user_email %} {{ user_email }} 님
+            <a href="{{ url_for('auth_bp.logout_ko') }}">로그아웃</a>
+            {% endif %}
+          </div>
+          {% if not user_email %}
+          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
+          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
+          {% endif %}
+          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
+          <li class="has-dropdown">
+            <a href="#">언어</a>
+            <div class="language-dropdown">
+              <a href="{{ url_for('index_ko') }}">한국어</a>
+              <a href="{{ url_for('index_en') }}">영어</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- Main content area -->
+    <main>{% block content %}{% endblock %}</main>
+
+    <!-- Footer section -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <img
+            src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
+            alt="Yonsei Logo"
+            class="footer-logo"
+          />
+        </div>
+        <div class="footer-right">
+          Wang Mincai<br />
+          Phan Ha Linh Vo<br />
+          Vu Thuy Anh Dinh<br />
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
