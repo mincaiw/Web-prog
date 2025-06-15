@@ -129,12 +129,16 @@
     <script>
       var button1 = document.getElementById("button1");
       var button2 = document.getElementById("button2");
-      button1.addEventListener("click", function () {
-        window.location.href = "{{ url_for('register', lang_code=lang) }}";
-      });
-      button2.addEventListener("click", function () {
-        window.location.href = "{{ url_for('find', lang_code=lang) }}";
-      });
+      if (button1) {
+        button1.addEventListener("click", function () {
+          window.location.href = "{{ url_for('register', lang_code=lang) }}";
+        });
+      }
+      if (button2) {
+        button2.addEventListener("click", function () {
+          window.location.href = "{{ url_for('find', lang_code=lang) }}";
+        });
+      }
     </script>
     {% endif %}
     <script>

@@ -13,6 +13,8 @@
   /* NEW: Define approximate header and footer heights for calculation */
   --header-height-approx: 75px; /* Adjust this based on your actual header height */
   --footer-height-approx: 100px; /* Adjust this based on your actual footer height */
+  --header-height: 0px; /* Dynamic value set by JS */
+  --footer-height: 0px; /* Dynamic value set by JS */
 }
 
 * {
@@ -57,7 +59,7 @@ body.auth-page {
 }
 
 .header-container {
-  max-width: 1980px;
+  max-width: 1800px; /* Adjusted from 1980px for better consistency */
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
@@ -520,7 +522,9 @@ body.auth-page {
 /* Login/Auth Page Specific Styles */
 .login-wrapper {
   width: 100%;
-  min-height: 100vh; /* 让内容至少占满整个视口高度 */
+  min-height: calc(
+    100vh - var(--header-height, 75px) - var(--footer-height, 100px)
+  ); /* Ensure it takes available vertical space after header/footer */
   display: flex;
   justify-content: center;
   align-items: flex-start; /* 顶部对齐 */
@@ -653,20 +657,25 @@ body.auth-page {
 }
 
 /* --- Map Layout Flexbox --- */
-#container {
+/* Styles for #container and children when body has 'map-page' class */
+body.map-page #container {
   display: flex;
-  flex-direction: row;
-  height: 90vh;
+  flex-direction: row; /* Default for larger screens */
+  flex-grow: 1; /* Allow to take available vertical space */
+  height: calc(
+    100vh - var(--header-height, 75px) - var(--footer-height, 100px)
+  ); /* Dynamic height based on header/footer */
   width: 100%;
   min-width: 0;
-  min-height: 600px;
+  min-height: 600px; /* Ensure a minimum height for the map area */
   background: #f8f9fa;
+  box-sizing: border-box;
 }
 
-#infoPanel {
-  width: 450px;
+body.map-page #infoPanel {
+  width: 550px;
   min-width: 260px;
-  max-width: 500px;
+  max-width: 420px;
   background: #fff;
   border-right: 1px solid #e5e5e5;
   padding: 32px 24px 24px 24px;
@@ -674,19 +683,41 @@ body.auth-page {
   overflow-y: auto;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
   z-index: 2;
+  flex-shrink: 0; /* Prevent panel from shrinking */
 }
 
-#map {
-  flex: 1 1 0;
-  min-width: 0;
+body.map-page #map {
+  flex: 1 1 0; /* Allows map to take all remaining space */
+  min-width: 0; /* Allow map to shrink */
   height: 100%;
   z-index: 1;
 }
 
-/* 让 infoPanel 内图片自适应 */
-#infoPanel .building-img {
+/* Make image inside infoPanel responsive */
+body.map-page #infoPanel .building-img {
   width: 100%;
-  height: auto;
+  height: auto; /* Allow height to adjust naturally */
   border-radius: 12px;
   object-fit: cover;
+}
+
+/* Responsive for Map Page */
+@media (max-width: 768px) {
+  body.map-page #container {
+    flex-direction: column; /* Stack info panel and map vertically */
+    height: auto; /* Allow height to adjust */
+    min-height: calc(
+      100vh - var(--header-height, 75px) - var(--footer-height, 100px)
+    );
+  }
+  body.map-page #infoPanel {
+    width: 100%; /* Panel takes full width */
+    height: auto; /* Panel height adjusts to content */
+    border-right: none; /* Remove right border when stacked */
+    border-bottom: 1px solid #e5e5e5; /* Add bottom border */
+  }
+  body.map-page #map {
+    width: 100%; /* Map takes full width */
+    min-height: 400px; /* Give map a minimum height on small screens */
+  }
 }

@@ -1,114 +1,92 @@
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Yonsei Lost & Found</title>
+{% extends 'base.html' %} {# 继承base.html #} {% block title %}습득물 검색{%
+endblock %} {% block head %} {{ super() }} {# 包含来自base.html的head内容 #}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='css/style_find.css') }}"
+/>
+{% endblock %} {% block main_content %} {# 所有页面主体内容都应放在此block中 #}
+<div class="find-page-container">
+  <div class="search-section">
+    <h2>습득물 검색</h2>
+    <div class="search-form-container">
+      <input
+        type="text"
+        id="searchKeyword"
+        placeholder="물품명 또는 건물명으로 검색..."
+        onkeyup="filterItems()"
+      />
+      <select id="filterCategory" onchange="filterItems()">
+        <option value="ALL">전체 카테고리</option>
+        <option value="전자기기">전자기기</option>
+        <option value="의류">의류</option>
+        <option value="문구류">문구류</option>
+        <option value="신분증">신분증</option>
+        <option value="가방">가방</option>
+        <option value="기타">기타</option>
+      </select>
+    </div>
+  </div>
 
-    <link
-      rel="shortcut icon"
-      href="{{ url_for('static', filename='images/기본형_심볼-01_cut.png') }}"
-      type="image/png"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style_find.css') }}"
-    />
-  </head>
-  <body>
-    <header>
-      <div class="container">
-        <!-- 로고 -->
-        <div class="logo">
-          <a href="{{ url_for('index_ko')}}">
-            <img
-              src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
-              alt="Yonsei"
-              style="width: 235px; height: auto"
-            />
-          </a>
-        </div>
-    
-        <ul>
-          <div class="user-info">
-          {% if user_email %} 
-            {{ user_email }} 님
-            <a href="{{ url_for('auth_bp.logout_ko') }}">로그아웃</a>
-          </div>
-          <br/>
-          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% else %}
-          </div>
-          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
-          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
-          <li><a href="{{ url_for('map_ko')}}">지도</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
-
-    </header>
-
-    <main class="findList">
-      <div class="lost_qfind2">
-        <h1>습득물을 검색해보세요!</h1>
-
-        <!-- 검색창 -->
-        <div class="search-container">
-          <form
-            method="GET"
-            action="{{ url_for('auth_bp.register_item') }}"
-            class="search-form"
-          >
-            <input
-              type="text"
-              name="q"
-              class="search-input"
-              placeholder="예: 지갑, 휴대폰, 카드..."
-              value="{{ request.args.get('q', '') }}"
-            />
-            <button type="submit" class="search-btn">검색</button>
-          </form>
-        </div>
-
-        <!-- 습득물 리스트 -->
-        <ul class="item-list">
-          {% for item in items %}
-          <li class="item">
-            <h3 class="item-title">{{ item.prdt_nm }}</h3>
-            <p class="item-detail">
-              📅 {{ item.start_ymd }} | 📍 {{ item.ubuilding }} | 🏷️ {{
-              item.prdt_cl_nm }}
-            </p>
-            <p class="item-description">{{ item.description }}</p>
-            {% if item.image_path %}
-            <img
-              src="{{ url_for('static', filename=item.image_path.replace('static/', '')) }}"
-              alt="습득물 이미지"
-              class="item-image"
-              style="width: 300px; height: auto; object-fit: cover;"
-            />
-            {% endif %}
-          </li>
-          {% else %}
-          <li class="no-result-wrapper">
-            <div class="no-result">🔍 등록된 습득물이 없습니다.</div>
-          </li>
-          {% endfor %}
-        </ul>
+  <div class="items-grid">
+    {% if items %} {% for item in items %}
+    <div
+      class="item-card"
+      data-category="{{ item.prdt_cl_nm }}"
+      data-building="{{ item.ubuilding }}"
+      data-name="{{ item.prdt_nm }}"
+    >
+      <div class="item-image-wrapper">
+        {% if item.image_path %} {# 正确使用url_for来引用静态文件 #}
+        <img
+          src="{{ url_for('static', filename=item.image_path) }}"
+          alt="{{ item.prdt_nm }}"
+          class="item-image"
+        />
+        {% else %} {# 缺少图片时的占位符 #}
+        <img
+          src="{{ url_for('static', filename='images/placeholder.png') }}"
+          alt="Placeholder"
+          class="item-image"
+        />
+        {% endif %}
       </div>
-    </main>
-  </body>
-</html>
+      <div class="item-details">
+        <h3 class="item-name">{{ item.prdt_nm }}</h3>
+        <p class="item-category">카테고리: {{ item.prdt_cl_nm }}</p>
+        <p class="item-date">발견일: {{ item.start_ymd }}</p>
+        <p class="item-building">발견 장소: {{ item.ubuilding }}</p>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <p class="no-items">아직 등록된 습득물이 없습니다.</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function filterItems() {
+    const keyword = document
+      .getElementById("searchKeyword")
+      .value.toLowerCase();
+    const category = document.getElementById("filterCategory").value;
+    const itemCards = document.querySelectorAll(".item-card");
+
+    itemCards.forEach((card) => {
+      const itemName = card.dataset.name.toLowerCase();
+      const itemCategory = card.dataset.category;
+      const itemBuilding = card.dataset.building.toLowerCase(); // 确保建筑物名称也转换为小写进行比较
+
+      const matchesKeyword =
+        itemName.includes(keyword) || itemBuilding.includes(keyword);
+      const matchesCategory = category === "ALL" || itemCategory === category;
+
+      if (matchesKeyword && matchesCategory) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+</script>
+{% endblock %}

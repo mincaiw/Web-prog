@@ -1,250 +1,140 @@
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Yonsei Lost & Found</title>
+{% extends 'base.html' %} {# IMPORTANT: Extend the base layout #} {% block title
+%}습득물 등록{% endblock %} {% block head %} {{ super() }} {% if messages %}
+<ul class="flashes">
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% if user_email %}
+<form
+  method="POST"
+  action="{{ url_for('auth_bp.register_item') }}"
+  enctype="multipart/form-data"
+>
+  {{ csrf_token() }}
+  <div class="list">
+    <label for="PRDT_CL_NM">물품 카테고리:</label>
+    <input type="text" id="PRDT_CL_NM" name="PRDT_CL_NM" required />
 
-    <link
-      rel="icon"
-      href="{{ url_for('static', filename='/images/기본형_심볼-01_cut.png') }}"
-      type="image/png"
-    />
+    <label for="START_YMD">발견 시간:</label>
+    <input type="date" id="START_YMD" name="START_YMD" required />
 
-    <!-- 지도 API -->
-    <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"></script>
+    <label for="PRDT_NM">물품명:</label>
+    <input type="text" id="PRDT_NM" name="PRDT_NM" required />
 
-    <!-- favicon -->
-    <link
-      rel="shortcut icon"
-      href="{{ url_for('static', filename='images/기본형_심볼-01_cut.png') }}"
-      type="image/png"
-    />
+    <label for="uBuilding">발견 장소:</label>
+    <select name="uBuilding" id="uBuilding" required>
+      <option value="" disabled selected>건물 선택</option>
+      <option value="101">언더우드기념도서관</option>
+      <option value="203">운동장</option>
+      <option value="305">송도1학사</option>
+      <option value="405">송도2학사</option>
+      <option value="302">자유관A</option>
+      <option value="301">자유관B</option>
+      <option value="510">저에너지친환경실험주택</option>
+      <option value="501">종합관</option>
+      <option value="401">진리관A</option>
+      <option value="402">진리관B</option>
+      <option value="502">진리관C</option>
+      <option value="503">진리관D</option>
+    </select>
 
-    <!-- 외부 CSS 연결 -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ url_for('static', filename='css/style_register.css') }}"
-    />
+    <div id="map"></div>
 
-    <style>
-      #map {
-        width: 100%;
-        height: 380px;
-        margin-bottom: 30px;
-        border: 1px solid #aaa;
-        border-radius: 8px;
-      }
-    </style>
-  </head>
+    <label for="itemImage">사진:</label><br />
+    <input type="file" id="itemImage" name="itemImage" accept="image/*" />
+    <button type="submit">등록</button>
+  </div>
+</form>
+{% else %}
+<a class="login-btn" href="{{ url_for('auth_bp.login', lang_code=lang) }}"
+  >로그인</a
+>
+{% endif %}
 
-    <header>
-      <div class="container">
-        <div class="logo">
-          <a href="{{ url_for('index_ko') }}">
-            <img
-              src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
-              alt="Yonsei"
-              style="width: 235px; height: auto"
-            />
-          </a>
-        </div>
-                <ul>
-          <div class="user-info">
-          {% if user_email %} 
-            {{ user_email }} 님
-            <a href="{{ url_for('auth_bp.logout_ko') }}">로그아웃</a>
-          </div>
-          <br/>
-          <li><a href="{{ url_for('map_ko') }}">지도</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% else %}
-          </div>
-          <li><a href="{{ url_for('login_ko') }}">로그인</a></li>
-          <li><a href="{{ url_for('signup_ko') }}">회원가입</a></li>
-          <li><a href="{{ url_for('map_ko')}}">지도</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
+<!-- 지도 연동 Script -->
+<script>
+  const buildingLocations = {
+    101: {
+      name: "언더우드기념도서관",
+      coords: [37.382499674654284, 126.67110064169147],
+    },
+    203: { name: "운동장", coords: [37.38505660284087, 126.67039362700353] },
+    305: { name: "송도1학사", coords: [37.38186484004004, 126.66721220250625] },
+    405: { name: "송도2학사", coords: [37.38332087037019, 126.67236874521204] },
+    302: { name: "자유관A", coords: [37.382683576045125, 126.6691958479459] },
+    301: { name: "자유관B", coords: [37.3834643374717, 126.66808021643931] },
+    510: {
+      name: "저에너지친환경실험주택",
+      coords: [37.38005045818827, 126.6700429389237],
+    },
+    501: { name: "종합관", coords: [37.382286855360775, 126.66990470276706] },
+    401: { name: "진리관A", coords: [37.38334132885237, 126.67081326999616] },
+    402: { name: "진리관B", coords: [37.382962779406405, 126.67157991126135] },
+    502: { name: "진리관C", coords: [37.38183522818802, 126.67031175217751] },
+    503: { name: "진리관D", coords: [37.38114903557426, 126.67142127822844] },
+  };
 
-    </div>
+  const defaultCenter = new naver.maps.LatLng(37.382, 126.6711394526905);
+  const map = new naver.maps.Map("map", {
+    center: defaultCenter,
+    zoom: 17,
+  });
 
-<div class="findList">
+  const marker = new naver.maps.Marker({
+    map: map,
+    position: defaultCenter,
+    visible: false,
+  });
 
-    <div class="lost_qfind2">
-        <h2>습득물을 등록해보세요!</h2>
-              {% if user_email %} 
-    </br>
-            <form method="POST" action="{{ url_for('auth_bp.register_item') }}" enctype="multipart/form-data">
-            <div class="list">
-              <label for="PRDT_CL_NM">분류명(내용):</label>
-              <input type="text" id="PRDT_CL_NM" name="PRDT_CL_NM" />
+  const infoWindow = new naver.maps.InfoWindow({
+    content: "",
+    maxWidth: 200,
+    backgroundColor: "#fff",
+    borderColor: "#2db400",
+    borderWidth: 2,
+    anchorSize: new naver.maps.Size(20, 20),
+    anchorColor: "#fff",
+    pixelOffset: new naver.maps.Point(10, -10),
+  });
 
-              <label for="START_YMD">습득기간:</label>
-              <input type="date" id="START_YMD" name="START_YMD" />
+  document.getElementById("uBuilding").addEventListener("change", function () {
+    const selected = this.value;
+    if (selected === "") {
+      // Changed from "ALL" to empty string for initial required option
+      marker.setVisible(false);
+      infoWindow.close();
+      map.setCenter(defaultCenter); // Reset map to default center
+      map.setZoom(17); // Reset zoom
+    } else if (buildingLocations[selected]) {
+      const { name, coords } = buildingLocations[selected];
+      const latlng = new naver.maps.LatLng(coords[0], coords[1]);
 
-              <label for="PRDT_NM">습득물명:</label>
-              <input type="text" id="PRDT_NM" name="PRDT_NM" />
+      map.setCenter(latlng);
+      marker.setPosition(latlng);
+      marker.setVisible(true);
 
-              <label for="DEP_PLACE">습득한 건물선택:</label>
-              <select name="uBuilding" id="uBuilding">
-                <option value="ALL" selected>전체</option>
-                <option value="101">언더우드기념도서관</option>
-                <option value="203">운동장</option>
-                <option value="305">송도1학사</option>
-                <option value="405">송도2학사</option>
-                <option value="302">자유관A</option>
-                <option value="301">자유관B</option>
-                <option value="510">저에너지친환경실험주택</option>
-                <option value="501">종합관</option>
-                <option value="401">진리관A</option>
-                <option value="402">진리관B</option>
-                <option value="502">진리관C</option>
-                <option value="503">진리관D</option>
-              </select>
+      infoWindow.setContent(
+        `<div style="padding:10px; font-size:14px;"><strong>${name}</strong></div>`
+      );
+      infoWindow.open(map, marker);
+    } else {
+      marker.setVisible(false);
+      infoWindow.close();
+    }
+  });
 
-              <div id="map"></div>
+  naver.maps.Event.addListener(marker, "click", function () {
+    if (infoWindow.getMap()) {
+      infoWindow.close();
+    } else {
+      infoWindow.open(map, marker);
+    }
+  });
 
-                    <!-- 이미지 업로드 -->
-                    <label for="itemImage">사진 업로드:</label><br>
-                    <input type="file" id="itemImage" name="itemImage" accept="image/*"required><br><br>
-
-            </div>
-
-            <input type="submit" value="Submit" />
-          </form>
-          {% else %}
-          <div class="login-notice">
-            <p class="login-message">
-              로그인 후에 등록 기능을 이용하실 수 있습니다.
-            </p>
-            <a class="login-btn" href="{{ url_for('auth_bp.login_ko') }}"
-              >로그인 하러가기</a
-            >
-          </div>
-          {% endif %}
-        </div>
-      </div>
-    </header>
-
-    <!-- 지도 연동 Script -->
-    <script>
-      const buildingLocations = {
-        101: {
-          name: "언더우드기념도서관",
-          coords: [37.382499674654284, 126.67110064169147],
-        },
-        203: {
-          name: "운동장",
-          coords: [37.38505660284087, 126.67039362700353],
-        },
-        305: {
-          name: "송도1학사",
-          coords: [37.38186484004004, 126.66721220250625],
-        },
-        405: {
-          name: "송도2학사",
-          coords: [37.38332087037019, 126.67236874521204],
-        },
-        302: {
-          name: "자유관A",
-          coords: [37.382683576045125, 126.6691958479459],
-        },
-        301: {
-          name: "자유관B",
-          coords: [37.3834643374717, 126.66808021643931],
-        },
-        510: {
-          name: "저에너지친환경실험주택",
-          coords: [37.38005045818827, 126.6700429389237],
-        },
-        501: {
-          name: "종합관",
-          coords: [37.382286855360775, 126.66990470276706],
-        },
-        401: {
-          name: "진리관A",
-          coords: [37.38334132885237, 126.67081326999616],
-        },
-        402: {
-          name: "진리관B",
-          coords: [37.382962779406405, 126.67157991126135],
-        },
-        502: {
-          name: "진리관C",
-          coords: [37.38183522818802, 126.67031175217751],
-        },
-        503: {
-          name: "진리관D",
-          coords: [37.38114903557426, 126.67142127822844],
-        },
-      };
-
-      const defaultCenter = new naver.maps.LatLng(37.382, 126.6711394526905);
-      const map = new naver.maps.Map("map", {
-        center: defaultCenter,
-        zoom: 17,
-      });
-
-      const marker = new naver.maps.Marker({
-        map: map,
-        position: defaultCenter,
-        visible: false,
-      });
-
-      const infoWindow = new naver.maps.InfoWindow({
-        content: "",
-        maxWidth: 200,
-        backgroundColor: "#fff",
-        borderColor: "#2db400",
-        borderWidth: 2,
-        anchorSize: new naver.maps.Size(20, 20),
-        anchorColor: "#fff",
-        pixelOffset: new naver.maps.Point(10, -10),
-      });
-
-      document
-        .getElementById("uBuilding")
-        .addEventListener("change", function () {
-          const selected = this.value;
-          if (buildingLocations[selected]) {
-            const { name, coords } = buildingLocations[selected];
-            const latlng = new naver.maps.LatLng(coords[0], coords[1]);
-
-            map.setCenter(latlng);
-            marker.setPosition(latlng);
-            marker.setVisible(true);
-
-            infoWindow.setContent(
-              `<div style="padding:10px; font-size:14px;"><strong>${name}</strong></div>`
-            );
-            infoWindow.open(map, marker);
-          } else {
-            marker.setVisible(false);
-            infoWindow.close();
-          }
-        });
-
-      naver.maps.Event.addListener(marker, "click", function () {
-        if (infoWindow.getMap()) {
-          infoWindow.close();
-        } else {
-          infoWindow.open(map, marker);
-        }
-      });
-    </script>
-  </body>
-</html>
+  // Ensure map redraws when window size changes (important for responsive layouts)
+  window.addEventListener("resize", () => {
+    naver.maps.Event.trigger(map, "resize");
+  });
+</script>
+{% endblock %}
