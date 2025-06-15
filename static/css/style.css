@@ -651,3 +651,42 @@ body.auth-page {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-size: 0.85em; /* Slightly reduced font size */
 }
+
+/* --- Map Layout Flexbox --- */
+#container {
+  display: flex;
+  flex-direction: row;
+  height: 90vh;
+  width: 100%;
+  min-width: 0;
+  min-height: 600px;
+  background: #f8f9fa;
+}
+
+#infoPanel {
+  width: 370px;
+  min-width: 260px;
+  max-width: 420px;
+  background: #fff;
+  border-right: 1px solid #e5e5e5;
+  padding: 32px 24px 24px 24px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
+  z-index: 2;
+}
+
+#map {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  z-index: 1;
+}
+
+/* 让 infoPanel 内图片自适应 */
+#infoPanel .building-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
