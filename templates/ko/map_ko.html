@@ -9,9 +9,15 @@
   type="text/javascript"
   src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"
 ></script>
-{# Removed style block - now in style.css #} {% endblock %} {% block body_attrs
-%}class="map-page"{% endblock %} {# Add map-page class to body #} {% block
-main_content %}
+<style>
+  .main-nav ul li:nth-child(1),
+  .main-nav ul li:nth-child(2),
+  .main-nav ul li:nth-child(3) {
+    display: none;
+  }
+</style>
+{% endblock %} {% block body_attrs %}class="map-page"{% endblock %} {# Add
+map-page class to body #} {% block main_content %}
 <div id="container">
   <div id="infoPanel">
     <h3>건물 정보</h3>

@@ -20,16 +20,13 @@
       type="text/css"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-    {% block head %}{% endblock %} {# Allows child templates to add extra head
-    content #}
+    {% block head %}{% endblock %}
   </head>
-  {# Add specific classes to body based on the current page for targeted styling
-  #}
   <body class="
     {% if request.endpoint == 'auth_bp.login' or request.endpoint == 'auth_bp.signup' or request.endpoint == 'auth_bp.forgot_password_ko' or request.endpoint == 'auth_bp.forgot_password_en' or request.endpoint == 'auth_bp.reset_password' %}auth-page{% endif %}
     {% if request.endpoint == 'map' %}map-page{% endif %}
     {% if request.endpoint == 'find' %}find-page{% endif %}
-    {% block body_classes %}{% endblock %} {# Allow child templates to add more classes #}
+    {% block body_classes %}{% endblock %}
   ">
     <header class="main-header">
       <div class="header-container">
@@ -41,7 +38,6 @@
             />
           </a>
         </div>
-
         <nav class="main-nav">
           <ul>
             {% if user_email %}
@@ -82,11 +78,8 @@
       </div>
     </header>
 
-    {# Global Flash Messages Display Area (for messages after redirect to non-auth pages) #}
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        {# ONLY show global flashes if not on an auth-related page.
-           Auth pages will have their own local flash message display areas. #}
         {% if request.endpoint not in [
             'auth_bp.login', 'auth_bp.signup', 'auth_bp.forgot_password_ko', 
             'auth_bp.forgot_password_en', 'auth_bp.reset_password', 
@@ -123,8 +116,7 @@
         </div>
       </div>
     </section>
-    {% else %} {# For all other pages, including map and auth pages #} {# This
-    main element will take up remaining vertical space #}
+    {% else %}
     <main style="flex-grow: 1; display: flex; flex-direction: column">
       {% block main_content %}{% endblock %}
     </main>
@@ -164,7 +156,6 @@
     </script>
     {% endif %}
    <script>
-        // Set header and footer heights for CSS variables dynamically
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.querySelector('.main-header');
             const footer = document.querySelector('.main-footer');
@@ -174,17 +165,14 @@
             if (footer) {
                 document.documentElement.style.setProperty('--footer-height', `${footer.offsetHeight}px`);
             }
-
-            // Auto-hide global flash messages after 3 seconds
             const flashMessages = document.querySelectorAll('#flash-message-container .flash-message');
             flashMessages.forEach(message => {
                 setTimeout(() => {
-                    message.classList.add('fade-out'); // Add class to trigger fade-out animation
-                    // IMPORTANT: Change 'animationend' to 'transitionend' for CSS transitions
-                    message.addEventListener('transitionend', () => { 
-                        message.remove(); // Remove element from DOM after animation
+                    message.classList.add('fade-out');
+                    message.addEventListener('transitionend', () => {
+                        message.remove();
                     });
-                }, 3000); // 3 seconds
+                }, 3000);
             });
         });
     </script>

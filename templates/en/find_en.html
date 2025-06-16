@@ -1,77 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %} {# Extends base.html #} {% block title %}Search Found
+Items{% endblock %} {% block head %} {{ super() }} {# Includes head content from
+base.html #}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='css/style_find.css') }}"
+/>
 
-  <head>
-    <meta charset="utf-8" />
-    <title>Yonsei Lost & Found</title>
-    <!-- Chrome, Safari, IE -->
-    <link
-      rel="shortcut icon"
-      href="static/images/기본형_심볼-01.jpg"
-      type="image/jpg"
-    />
-    <link rel="icon" href="static/images/기본형_심볼-01.jpg" type="image/jpg" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_find.css') }}">
-  </head>
+{% endblock %} {% block main_content %} {# All page body content should be
+placed in this block #}
+<div class="find-page-container">
+  <div class="search-section">
+    <h2>Search for Lost Items</h2>
+    <div class="search-form-container">
+      <input
+        type="text"
+        id="searchKeyword"
+        placeholder="Search by item name or building..."
+        onkeyup="filterItems()"
+      />
+      <select id="filterCategory" onchange="filterItems()">
+        <option value="ALL">All Categories</option>
+        <option value="전자기기">Electronics</option>
+        <option value="의류">Clothing</option>
+        <option value="문구류">Stationery</option>
+        <option value="신분증">ID Cards</option>
+        <option value="가방">Bags</option>
+        <option value="기타">Others</option>
+      </select>
+    </div>
+  </div>
 
-        <body>
-            <header>
-                <div class="container">
-                    <!-- Logo -->
-                    <div class="logo">
-                    <img
-                        src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
-                        alt="Yonsei"
-                        style="width: 225px; height: auto"
-                    />
-                    </div>
+  <div class="items-grid">
+    {% if items %} {% for item in items %}
+    <div
+      class="item-card"
+      data-category="{{ item.prdt_cl_nm }}"
+      data-building="{{ item.ubuilding }}"
+      data-name="{{ item.prdt_nm }}"
+    >
+      <div class="item-details">
+        <h3 class="item-name">{{ item.prdt_nm }}</h3>
+        <p class="item-category">Category: {{ item.prdt_cl_nm }}</p>
+        <p class="item-date">Found Date: {{ item.start_ymd }}</p>
+        <p class="item-building">Found Place: {{ item.ubuilding }}</p>
+      </div>
+      <div class="item-image-wrapper">
+        {% if item.image_path %}
+        <img
+          src="{{ url_for('static', filename=item.image_path) }}"
+          alt="{{ item.prdt_nm }}"
+          class="item-image"
+        />
+        {% else %}
+        <img
+          src="{{ url_for('static', filename='images/placeholder.png') }}"
+          alt="Placeholder"
+          class="item-image"
+        />
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <p class="no-items">No lost items registered yet.</p>
+    {% endif %}
+  </div>
+</div>
 
-                    <!-- Langugages -->
-                    <ul class="gnb_lang">
-                        <li><a href="{{ url_for('index_ko') }}">한국어</a></li>
-                        <li><a href="{{ url_for('index_en') }}">ENGLISH</a></li>
-                    </ul>
-                </div>
-                
+<script>
+  function filterItems() {
+    const keyword = document
+      .getElementById("searchKeyword")
+      .value.toLowerCase();
+    const category = document.getElementById("filterCategory").value;
+    const building = document.getElementById("filterBuilding").value;
+    const itemCards = document.querySelectorAll(".item-card");
 
+    itemCards.forEach((card) => {
+      const itemName = card.dataset.name.toLowerCase();
+      const itemCategory = card.dataset.category;
+      const itemBuilding = card.dataset.building; // Keep as is for direct comparison with select option values
 
-<div class="findList">
+      const matchesKeyword =
+        itemName.includes(keyword) ||
+        itemBuilding.toLowerCase().includes(keyword);
+      const matchesCategory = category === "ALL" || itemCategory === category;
+      const matchesBuilding = building === "ALL" || itemBuilding === building; // Direct comparison
 
-    <div class="lost_qfind2">
-        <h1>Search for your item!</h1>
-    </br>
-
-            <div class="list">
-                <!-- Name -->
-                <label for="PRDT_CL_NM">Name of the item:</label><br>
-                <input type="text" id="PRDT_CL_NM" name="PRDT_CL_NM"><br><br>
-
-                <!-- Date -->
-                <label for="START_YMD">When did you lost?</label><br>
-                <input type="date" id="START_YMD" name="START_YMD"><br><br>
-
-                    <!-- Building  -->
-                    <label for="DEP_PLACE">Which building?</label><br>
-                    <select name="uBuilding" id="uBuilding">
-                        <option value="ALL" selected>ALL</option>
-                        <option value="102">Y-플라자</option>
-                        <option value="101">언더우드기념도서관</option>
-                        <option value="203">운동장</option>
-                        <option value="302">자유관A</option>
-                        <option value="301">자유관B</option>
-                        <option value="510">저에너지친환경실험주택</option>
-                        <option value="501">종합관</option>
-                        <option value="401">진리관A</option>
-                        <option value="402">진리관B</option>
-                        <option value="502">진리관C</option>
-                        <option value="503">진리관D</option>
-                    </select>
-            </div>
-            <input type="submit" value="Submit">
-        </form>
-        </div>
-        </div>
-        </body>
-    </header>
-        </html>
-
+      if (matchesKeyword && matchesCategory && matchesBuilding) {
+        card.style.display = "flex";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+</script>
+{% endblock %}

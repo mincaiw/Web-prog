@@ -1,6 +1,6 @@
-{# templates/en/index_en.html #} {% extends 'base.html' %} {% block title
-%}Songdo Campus — Yonsei Lost & Found{% endblock %} {% block hero %}
-<!-- Page title & buttons go into the header hero area -->
+{% extends 'base.html' %} {% block title %}Songdo Campus — Yonsei Lost & Found{%
+endblock %} {% block hero %}
+
 <div class="title">
   <h2>Songdo Campus</h2>
   <h1>Yonsei Lost & Found</h1>
@@ -10,7 +10,7 @@
   <button id="button2">Search for found items</button>
 </div>
 {% endblock %} {% block content %}
-<!-- 如果有其他正文内容，放这里 -->
+
 <script>
   document.getElementById("button1").addEventListener("click", function () {
     window.location.href = "{{ url_for('register_en') }}";

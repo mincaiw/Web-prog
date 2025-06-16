@@ -1,31 +1,30 @@
-/* General resets and fonts */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Noto Sans KR", sans-serif; /* Prefer Noto Sans KR for Korean content */
+  font-family: "Noto Sans KR", sans-serif;
 }
 
-/* Body background for register page (inherits from base.html .auth-page) */
 body.find-page {
   background-image: linear-gradient(rgba(0, 0, 0, 0.43), rgba(0, 0, 0, 0.43)),
     url(/static/images/main_page.jpeg);
   background-repeat: no-repeat;
-  background-attachment: fixed; /* Fixed background */
+  background-attachment: fixed;
   background-position: center;
   background-size: cover;
   display: flex;
-  flex-direction: column; /* Ensure vertical stacking for flex-grow on main content */
+  flex-direction: column;
   min-height: 100vh;
 }
-/* General styling for find page */
+
 .find-page-container {
   padding: 40px 40px;
   max-width: 1200px;
-  margin: 20px 400px;
+  margin: 20px auto;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: center;
 }
 
 .search-section {
@@ -43,7 +42,7 @@ body.find-page {
   display: flex;
   justify-content: center;
   gap: 15px;
-  flex-wrap: wrap; /* 允许在小屏幕上换行 */
+  flex-wrap: wrap;
 }
 
 .search-form-container input[type="text"],
@@ -52,8 +51,8 @@ body.find-page {
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1em;
-  flex: 1; /* 允许输入框增长 */
-  min-width: 250px; /* 换行前的最小宽度 */
+  flex: 1;
+  min-width: 250px;
   max-width: 400px;
 }
 
@@ -70,10 +69,7 @@ body.find-page {
 
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(320px, 1fr)
-  ); /* Adjusted minmax for wider cards */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 25px;
   padding: 30px 0;
 }
@@ -84,11 +80,11 @@ body.find-page {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex; /* Changed from column to flex for horizontal layout */
-  flex-direction: row; /* Arrange children in a row */
-  align-items: center; /* Vertically align content */
-  padding: 15px; /* Add padding to the card itself */
-  gap: 15px; /* Space between details and image */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 15px;
+  gap: 15px;
 }
 
 .item-card:hover {
@@ -97,47 +93,47 @@ body.find-page {
 }
 
 .item-details {
-  flex: 1; /* Allows item-details to take up available space */
-  padding: 0; /* Remove padding as it's now on the card */
+  flex: 1;
+  padding: 0;
   text-align: left;
 }
 
 .item-image-wrapper {
-  width: 100px; /* Fixed width for the square container */
-  height: 100px; /* Fixed height for the square container */
-  flex-shrink: 0; /* Prevent the image wrapper from shrinking */
-  display: flex; /* Use flexbox to center image if it's smaller than the container */
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
   background-color: #eee;
-  border-radius: 5px; /* Optional: slight rounded corners for the image wrapper */
-  border: 1px solid #ddd; /* Optional: a subtle border */
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
 
 .item-image {
-  max-width: 100%; /* Ensures image doesn't overflow container */
-  max-height: 100%; /* Ensures image doesn't overflow container */
-  object-fit: contain; /* Key property: image scales to fit, preserves aspect ratio */
-  display: block; /* Remove any extra space below the image */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .item-name {
-  font-size: 1.1em; /* Slightly smaller for better fit in horizontal layout */
+  font-size: 1.1em;
   font-weight: 700;
   color: var(--text-dark);
-  margin-bottom: 5px; /* Reduced margin */
+  margin-bottom: 5px;
 }
 
 .item-category,
 .item-date,
 .item-building {
-  font-size: 0.85em; /* Slightly smaller for better fit */
+  font-size: 0.85em;
   color: #666;
-  margin-bottom: 3px; /* Reduced margin */
+  margin-bottom: 3px;
 }
 
 .no-items {
-  grid-column: 1 / -1; /* 跨越所有列 */
+  grid-column: 1 / -1;
   text-align: center;
   font-size: 1.2em;
   color: #888;
@@ -145,31 +141,30 @@ body.find-page {
 }
 
 @media (max-width: 768px) {
-  /* Adjusted breakpoint for item-card stacking */
   .item-card {
-    flex-direction: column; /* Stack image and details vertically on smaller screens */
-    align-items: flex-start; /* Align content to the start when stacked */
-    padding: 15px; /* Keep padding */
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
   }
 
   .item-image-wrapper {
-    width: 100%; /* Image wrapper takes full width when stacked */
-    height: 180px; /* Adjust height for stacked image */
-    margin-bottom: 15px; /* Add space below image when stacked */
+    width: 100%;
+    height: 180px;
+    margin-bottom: 15px;
   }
 
   .item-details {
-    padding-left: 0; /* No extra padding on left when stacked */
+    padding-left: 0;
   }
 
   .item-name {
-    font-size: 1.3em; /* Restore larger font for name when stacked */
+    font-size: 1.3em;
   }
 
   .item-category,
   .item-date,
   .item-building {
-    font-size: 0.9em; /* Restore larger font for details when stacked */
+    font-size: 0.9em;
   }
 }
 
@@ -181,10 +176,10 @@ body.find-page {
   .search-form-container input[type="text"],
   .search-form-container select {
     width: 90%;
-    max-width: none; /* 在小屏幕上移除最大宽度限制 */
+    max-width: none;
   }
   .items-grid {
-    grid-template-columns: 1fr; /* 在非常小的屏幕上单列显示 */
+    grid-template-columns: 1fr;
     gap: 20px;
   }
 }

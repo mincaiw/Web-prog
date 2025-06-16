@@ -1,11 +1,11 @@
-{% extends 'base.html' %} {# 继承base.html #} {% block title %}습득물 검색{%
-endblock %} {% block head %} {{ super() }} {# 包含来自base.html的head内容 #}
+{% extends 'base.html' %} {% block title %}습득물 검색{% endblock %} {% block
+head %} {{ super() }}
 <link
   rel="stylesheet"
   type="text/css"
   href="{{ url_for('static', filename='css/style_find.css') }}"
 />
-{% endblock %} {% block main_content %} {# 所有页面主体内容都应放在此block中 #}
+{% endblock %} {% block main_content %}
 <div class="find-page-container">
   <div class="search-section">
     <h2>습득물 검색</h2>
@@ -43,13 +43,13 @@ endblock %} {% block head %} {{ super() }} {# 包含来自base.html的head内容
         <p class="item-building">발견 장소: {{ item.ubuilding }}</p>
       </div>
       <div class="item-image-wrapper">
-        {% if item.image_path %} {# 正确使用url_for来引用静态文件 #}
+        {% if item.image_path %}
         <img
           src="{{ url_for('static', filename=item.image_path) }}"
           alt="{{ item.prdt_nm }}"
           class="item-image"
         />
-        {% else %} {# 缺少图片时的占位符 #}
+        {% else %}
         <img
           src="{{ url_for('static', filename='images/placeholder.png') }}"
           alt="Placeholder"
@@ -75,15 +75,14 @@ endblock %} {% block head %} {{ super() }} {# 包含来自base.html的head内容
     itemCards.forEach((card) => {
       const itemName = card.dataset.name.toLowerCase();
       const itemCategory = card.dataset.category;
-      const itemBuilding = card.dataset.building.toLowerCase(); // 确保建筑物名称也转换为小写进行比较
+      const itemBuilding = card.dataset.building.toLowerCase();
 
       const matchesKeyword =
         itemName.includes(keyword) || itemBuilding.includes(keyword);
       const matchesCategory = category === "ALL" || itemCategory === category;
 
       if (matchesKeyword && matchesCategory) {
-        card.style.display =
-          "flex"; /* Changed from 'block' to 'flex' for visibility */
+        card.style.display = "flex";
       } else {
         card.style.display = "none";
       }

@@ -1,250 +1,227 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Yonsei Lost & Found</title>
+{% extends 'base.html' %} {% block title %}Register Found Item{% endblock %} {%
+block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='css/style_register.css') }}"
+/>
+<script
+  type="text/javascript"
+  src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"
+></script>
 
-    <link
-      rel="icon"
-      href="{{ url_for('static', filename='/images/기본형_심볼-01_cut.png') }}"
-      type="image/png"
-    />
-
-    <!-- 지도 API -->
-    <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"></script>
-
-    <!-- favicon -->
-    <link
-      rel="shortcut icon"
-      href="{{ url_for('static', filename='images/기본형_심볼-01_cut.png') }}"
-      type="image/png"
-    />
-
-    <!-- 외부 CSS 연결 -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ url_for('static', filename='css/style_register.css') }}"
-    />
-
-    <style>
-      #map {
-        width: 100%;
-        height: 380px;
-        margin-bottom: 30px;
-        border: 1px solid #aaa;
-        border-radius: 8px;
-      }
-    </style>
-  </head>
-
-    <header>
-      <div class="container">
-        <div class="logo">
-          <a href="{{ url_for('index_ko') }}">
-            <img
-              src="{{ url_for('static', filename='images/기본형_심볼-03-removebg-preview.png') }}"
-              alt="Yonsei"
-              style="width: 235px; height: auto"
-            />
-          </a>
-        </div>
-                <ul>
-          <div class="user-info">
-          {% if user_email %} 
-            {{ user_email }} 
-            <a href="{{ url_for('auth_bp.logout_en') }}">Logout</a>
-          </div>
-          <br/>
-          <li><a href="{{ url_for('map_en') }}">Map</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% else %}
-          </div>
-          <li><a href="{{ url_for('login_en') }}">Login</a></li>
-          <li><a href="{{ url_for('signup_en') }}">Signup</a></li>
-          <li><a href="{{ url_for('map_en')}}">Map</a></li>
-          <li>
-            <a href="#" class="has-dropdown">Languages</a>
-            <div class="language-dropdown">
-              <a href="{{ url_for('index_ko') }}">한국어</a>
-              <a href="{{ url_for('index_en') }}">English</a>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
-
-    </div>
-
-<div class="findList">
-
-    <div class="lost_qfind2">
-        <h2>Try to upload the item!</h2>
-              {% if user_email %} 
-    </br>
-            <form method="POST" action="{{ url_for('auth_bp.register_item') }}" enctype="multipart/form-data">
-            <div class="list">
-              <label for="PRDT_CL_NM">Item category:</label>
-              <input type="text" id="PRDT_CL_NM" name="PRDT_CL_NM" />
-
-              <label for="START_YMD">Founded Time:</label>
-              <input type="date" id="START_YMD" name="START_YMD" />
-
-              <label for="PRDT_NM">Item name:</label>
-              <input type="text" id="PRDT_NM" name="PRDT_NM" />
-
-              <label for="DEP_PLACE">Founded Place:</label>
-              <select name="uBuilding" id="uBuilding">
-                <option value="ALL" selected>ALL</option>
-                <option value="101">Underwood memorial Library</option>
-                <option value="203">YIC Field</option>
-                <option value="305">Songdo Domitory A/B/C</option>
-                <option value="405">Songdo Somitory D/E/F/G</option>
-                <option value="302">Libertas Hall A</option>
-                <option value="301">LIbertas Hall B</option>
-                <option value="510">Greenhome Plus</option>
-                <option value="501">Vision Hall</option>
-                <option value="401">Veritas Hall A</option>
-                <option value="402">Veritas Hall B</option>
-                <option value="502">Veritas Hall C</option>
-                <option value="503">Veritas D</option>
-              </select>
-
-              <div id="map"></div>
-
-                    <!-- 이미지 업로드 -->
-                    <label for="itemImage">Photo:</label><br>
-                    <input type="file" id="itemImage" name="itemImage" accept="image/*"required><br><br>
-
-            </div>
-
-            <input type="submit" value="Submit" />
-          </form>
-          {% else %}
-          <div class="login-notice">
-            <p class="login-message">
-              Login for register the item.
-            </p>
-            <a class="login-btn" href="{{ url_for('auth_bp.login_en') }}"
-              >Login</a
-            >
-          </div>
-          {% endif %}
-        </div>
+{% endblock %} {% block body_classes %}register-page{% endblock %} {# Add a
+specific class for registration page body #} {% block main_content %}
+<div class="register-wrapper">
+  <div class="register-card">
+    <h2>Register Found Item</h2>
+    {# Local Flash Messages for this specific page #} {% with messages =
+    get_flashed_messages(with_categories=true) %} {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %} {% if user_email %}
+    <form
+      method="POST"
+      action="{{ url_for('auth_bp.register_item') }}"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <label for="PRDT_CL_NM">Item Category:</label>
+        <select id="PRDT_CL_NM" name="PRDT_CL_NM" required>
+          <option value="" disabled selected>Select Category</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Stationery">Stationery</option>
+          <option value="ID Cards">ID Cards</option>
+          <option value="Bags">Bags</option>
+          <option value="Others">Others</option>
+        </select>
       </div>
-    </header>
+      <div class="form-group">
+        <label for="START_YMD">Found Time:</label>
+        <input type="date" id="START_YMD" name="START_YMD" required />
+      </div>
 
-    <!-- 지도 연동 Script -->
-    <script>
-      const buildingLocations = {
-        101: {
-          name: "언더우드기념도서관",
-          coords: [37.382499674654284, 126.67110064169147],
-        },
-        203: {
-          name: "운동장",
-          coords: [37.38505660284087, 126.67039362700353],
-        },
-        305: {
-          name: "송도1학사",
-          coords: [37.38186484004004, 126.66721220250625],
-        },
-        405: {
-          name: "송도2학사",
-          coords: [37.38332087037019, 126.67236874521204],
-        },
-        302: {
-          name: "자유관A",
-          coords: [37.382683576045125, 126.6691958479459],
-        },
-        301: {
-          name: "자유관B",
-          coords: [37.3834643374717, 126.66808021643931],
-        },
-        510: {
-          name: "저에너지친환경실험주택",
-          coords: [37.38005045818827, 126.6700429389237],
-        },
-        501: {
-          name: "종합관",
-          coords: [37.382286855360775, 126.66990470276706],
-        },
-        401: {
-          name: "진리관A",
-          coords: [37.38334132885237, 126.67081326999616],
-        },
-        402: {
-          name: "진리관B",
-          coords: [37.382962779406405, 126.67157991126135],
-        },
-        502: {
-          name: "진리관C",
-          coords: [37.38183522818802, 126.67031175217751],
-        },
-        503: {
-          name: "진리관D",
-          coords: [37.38114903557426, 126.67142127822844],
-        },
-      };
+      <div class="form-group">
+        <label for="PRDT_NM">Item Name:</label>
+        <input
+          type="text"
+          id="PRDT_NM"
+          name="PRDT_NM"
+          placeholder="e.g., Smartphone, Wallet"
+          required
+        />
+      </div>
 
-      const defaultCenter = new naver.maps.LatLng(37.382, 126.6711394526905);
-      const map = new naver.maps.Map("map", {
-        center: defaultCenter,
-        zoom: 17,
-      });
+      <div class="form-group">
+        <label for="uBuilding">Found Place:</label>
+        <select name="uBuilding" id="uBuilding" required>
+          <option value="" disabled selected>Select Building</option>
+          <option value="101">Underwood Memorial Library</option>
+          <option value="203">Soccer Field</option>
+          <option value="305">Songdo Dorm A, B, C</option>
+          <option value="405">Songdo Dorm D, E, F, G</option>
+          <option value="302">Libertas Hall A</option>
+          <option value="301">Libertas Hall B</option>
+          <option value="510">Pilot Project of Sustainable Housing</option>
+          <option value="501">Vision Hall</option>
+          <option value="401">Veritas Hall A</option>
+          <option value="402">Veritas Hall B</option>
+          <option value="502">Veritas Hall C</option>
+          <option value="503">Veritas Hall D</option>
+        </select>
+      </div>
 
-      const marker = new naver.maps.Marker({
-        map: map,
-        position: defaultCenter,
-        visible: false,
-      });
+      <div class="form-group map-container">
+        <label>Confirm Location on Map:</label>
+        <div id="map"></div>
+      </div>
 
-      const infoWindow = new naver.maps.InfoWindow({
-        content: "",
-        maxWidth: 200,
-        backgroundColor: "#fff",
-        borderColor: "#2db400",
-        borderWidth: 2,
-        anchorSize: new naver.maps.Size(20, 20),
-        anchorColor: "#fff",
-        pixelOffset: new naver.maps.Point(10, -10),
-      });
+      <div class="form-group">
+        <label for="itemImage">Photo:</label>
+        <input type="file" id="itemImage" name="itemImage" accept="image/*" />
+      </div>
 
-      document
-        .getElementById("uBuilding")
-        .addEventListener("change", function () {
-          const selected = this.value;
-          if (buildingLocations[selected]) {
-            const { name, coords } = buildingLocations[selected];
-            const latlng = new naver.maps.LatLng(coords[0], coords[1]);
+      <button type="submit" class="submit-button">Register</button>
+    </form>
+    {% else %}
+    <div class="login-notice">
+      <p class="login-message">Login is required to register a found item.</p>
+      <a class="login-btn" href="{{ url_for('auth_bp.login', lang_code='en') }}"
+        >Login</a
+      >
+    </div>
+    {% endif %}
+  </div>
+</div>
 
-            map.setCenter(latlng);
-            marker.setPosition(latlng);
-            marker.setVisible(true);
+<script>
+  const buildingLocations = {
+    // Only the specified buildings are included here, with their corresponding English names and original coordinates.
+    101: {
+      name: "Underwood Memorial Library",
+      coords: [37.382499674654284, 126.67110064169147],
+    },
+    203: {
+      name: "Soccer Field",
+      coords: [37.38505660284087, 126.67039362700353],
+    },
+    305: {
+      name: "Songdo Dorm A, B, C",
+      coords: [37.38186484004004, 126.66721220250625],
+    }, // Using A's coords for A,B,C group
+    405: {
+      name: "Songdo Dorm D, E, F, G",
+      coords: [37.38332087037019, 126.67236874521204],
+    }, // Using D's coords for D,E,F,G group
+    302: {
+      name: "Libertas Hall A",
+      coords: [37.382683576045125, 126.6691958479459],
+    },
+    301: {
+      name: "Libertas Hall B",
+      coords: [37.3834643374717, 126.66808021643931],
+    },
+    510: {
+      name: "Pilot Project of Sustainable Housing",
+      coords: [37.38005045818827, 126.6700429389237],
+    },
+    501: {
+      name: "Vision Hall",
+      coords: [37.382286855360775, 126.66990470276706],
+    },
+    401: {
+      name: "Veritas Hall A",
+      coords: [37.38334132885237, 126.67081326999616],
+    },
+    402: {
+      name: "Veritas Hall B",
+      coords: [37.382962779406405, 126.67157991126135],
+    },
+    502: {
+      name: "Veritas Hall C",
+      coords: [37.38183522818802, 126.67031175217751],
+    },
+    503: {
+      name: "Veritas Hall D",
+      coords: [37.38114903557426, 126.67142127822844],
+    },
+  };
 
-            infoWindow.setContent(
-              `<div style="padding:10px; font-size:14px;"><strong>${name}</strong></div>`
-            );
-            infoWindow.open(map, marker);
-          } else {
-            marker.setVisible(false);
-            infoWindow.close();
-          }
-        });
+  // Check if Naver Maps API is loaded before initializing
+  if (typeof naver !== "undefined" && naver.maps) {
+    const defaultCenter = new naver.maps.LatLng(37.382, 126.6711394526905);
+    const map = new naver.maps.Map("map", {
+      center: defaultCenter,
+      zoom: 17,
+      mapTypeId: naver.maps.MapTypeId.NORMAL,
+      minZoom: 14,
+      maxZoom: 20,
+    });
 
-      naver.maps.Event.addListener(marker, "click", function () {
-        if (infoWindow.getMap()) {
+    const marker = new naver.maps.Marker({
+      map: map,
+      position: defaultCenter,
+      visible: false,
+    });
+
+    const infoWindow = new naver.maps.InfoWindow({
+      content: "",
+      maxWidth: 200,
+      backgroundColor: "#fff",
+      borderColor: "#2db400",
+      borderWidth: 2,
+      anchorSize: new naver.maps.Size(20, 20),
+      anchorColor: "#fff",
+      pixelOffset: new naver.maps.Point(10, -10),
+    });
+
+    document
+      .getElementById("uBuilding")
+      .addEventListener("change", function () {
+        const selected = this.value;
+        if (selected === "") {
+          marker.setVisible(false);
           infoWindow.close();
-        } else {
+          map.setCenter(defaultCenter);
+          map.setZoom(17);
+        } else if (buildingLocations[selected]) {
+          const { name, coords } = buildingLocations[selected];
+          const latlng = new naver.maps.LatLng(coords[0], coords[1]);
+
+          map.setCenter(latlng);
+          marker.setPosition(latlng);
+          marker.setVisible(true);
+
+          infoWindow.setContent(
+            `<div style="padding:10px; font-size:14px; font-weight:bold;">${name}</div>`
+          );
           infoWindow.open(map, marker);
+        } else {
+          marker.setVisible(false);
+          infoWindow.close();
         }
       });
-    </script>
-  </body>
-</html>
+
+    naver.maps.Event.addListener(marker, "click", function () {
+      if (infoWindow.getMap()) {
+        infoWindow.close();
+      } else {
+        infoWindow.open(map, marker);
+      }
+    });
+
+    // Ensure map redraws when window size changes (important for responsive layouts)
+    window.addEventListener("resize", () => {
+      naver.maps.Event.trigger(map, "resize");
+    });
+  } else {
+    console.error("Naver Maps API not loaded.");
+    document.getElementById("map").innerHTML =
+      "<p>Map loading failed: Unable to load Naver Maps API.</p>";
+  }
+</script>
+{% endblock %}

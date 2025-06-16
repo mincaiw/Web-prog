@@ -9,6 +9,13 @@ endblock %} {% block head %} {{ super() }}
   type="text/javascript"
   src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=udhwj5en73"
 ></script>
+<style>
+  .main-nav ul li:nth-child(1),
+  .main-nav ul li:nth-child(2),
+  .main-nav ul li:nth-child(3) {
+    display: none;
+  }
+</style>
 {% endblock %} {% block body_attrs %}class="map-page"{% endblock %} {% block
 main_content %}
 <div id="container">
@@ -31,31 +38,31 @@ main_content %}
       },
     },
     203: {
-      name: "YIC Field",
+      name: "Soccer Field",
       coords: [37.38505660284087, 126.67039362700353],
       img: "{{ url_for('static', filename='map_img/203.png') }}",
       info: {
-        office: "Dorm 2, Building D, 1F Security Office",
+        office: "Dorm D, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
         phone: "032-749-5205",
       },
     },
     305: {
-      name: "Songdo Dormitory 1",
+      name: "Songdo Dorm A, B, C",
       coords: [37.38186484004004, 126.66721220250625],
       img: "{{ url_for('static', filename='map_img/305.png') }}",
       info: {
-        office: "Dorm 1, Building C, 1F Security Office",
+        office: "Dorm C, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
         phone: "032-749-5105",
       },
     },
     405: {
-      name: "Songdo Dormitory 2",
+      name: "Songdo Dorm D, E, F, G",
       coords: [37.38332087037019, 126.67236874521204],
       img: "{{ url_for('static', filename='map_img/405.png') }}",
       info: {
-        office: "Dorm 2, Building D, 1F Security Office",
+        office: "Dorm D, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
         phone: "032-749-5205",
       },
@@ -81,7 +88,7 @@ main_content %}
       },
     },
     510: {
-      name: "Low Energy Eco-friendly Experimental House",
+      name: "Pilot Project of Sustainable Housing",
       coords: [37.38005045818827, 126.6700429389237],
       img: "{{ url_for('static', filename='map_img/510.png') }}",
       info: {
@@ -90,48 +97,48 @@ main_content %}
       },
     },
     501: {
-      name: "Comprehensive Building",
+      name: "Vision Hall",
       coords: [37.382286855360775, 126.66990470276706],
       img: "{{ url_for('static', filename='map_img/501.png') }}",
       info: {
-        office: "Comprehensive Building, 1F Security Office",
+        office: "Vision Hall, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
         phone: "032-749-2118",
       },
     },
     401: {
-      name: "Jinrigwan A",
+      name: "Veritas Hall A",
       coords: [37.38334132885237, 126.67081326999616],
       img: "{{ url_for('static', filename='map_img/401.png') }}",
       info: {
-        office: "Jinrigwan A, 1F Security Office",
+        office: "Veritas Hall A, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
       },
     },
     402: {
-      name: "Jinrigwan B",
+      name: "Veritas Hall B",
       coords: [37.382962779406405, 126.67157991126135],
       img: "{{ url_for('static', filename='map_img/402.png') }}",
       info: {
-        office: "Jinrigwan B, 1F Security Office",
+        office: "Veritas Hall B, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
       },
     },
     502: {
-      name: "Jinrigwan C",
+      name: "Veritas Hall C",
       coords: [37.38183522818802, 126.67031175217751],
       img: "{{ url_for('static', filename='map_img/502.png') }}",
       info: {
-        office: "Jinrigwan C, 1F Security Office",
+        office: "Veritas Hall C, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
       },
     },
     503: {
-      name: "Jinrigwan D",
+      name: "Veritas Hall D",
       coords: [37.38114903557426, 126.67142127822844],
       img: "{{ url_for('static', filename='map_img/503.png') }}",
       info: {
-        office: "Jinrigwan D, 1F Security Office",
+        office: "Veritas Hall D, 1F Security Office",
         time: "Mon-Fri 09:00~17:00",
       },
     },
@@ -226,7 +233,6 @@ main_content %}
     });
   }
 
-  // Ensure map redraws when window size changes
   window.addEventListener('resize', () => {
     naver.maps.Event.trigger(map, 'resize');
   });
