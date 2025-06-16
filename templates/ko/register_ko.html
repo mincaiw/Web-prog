@@ -29,15 +29,17 @@ specific class for registration page body #} {% block main_content %}
     >
       <div class="form-group">
         <label for="PRDT_CL_NM">물품 카테고리:</label>
-        <input
-          type="text"
-          id="PRDT_CL_NM"
-          name="PRDT_CL_NM"
-          placeholder="예: 전자기기, 의류"
-          required
-        />
+        <select id="PRDT_CL_NM" name="PRDT_CL_NM" required>
+          <option value="" disabled selected>카테고리 선택</option>
+          {# Added a disabled, selected placeholder option #}
+          <option value="전자기기">전자기기</option>
+          <option value="의류">의류</option>
+          <option value="문구류">문구류</option>
+          <option value="신분증">신분증</option>
+          <option value="가방">가방</option>
+          <option value="기타">기타</option>
+        </select>
       </div>
-
       <div class="form-group">
         <label for="START_YMD">발견 시간:</label>
         <input type="date" id="START_YMD" name="START_YMD" required />

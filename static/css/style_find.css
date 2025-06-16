@@ -21,7 +21,7 @@ body.find-page {
 /* General styling for find page */
 .find-page-container {
   padding: 40px 40px;
-  max-width: 1400px;
+  max-width: 1800px;
   margin: 20px auto;
   background-color: #fff;
   border-radius: 10px;
@@ -70,9 +70,12 @@ body.find-page {
 
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 响应式网格 */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(320px, 1fr)
+  ); /* Adjusted minmax for wider cards */
   gap: 25px;
-  padding: 20px 0;
+  padding: 30px 0;
 }
 
 .item-card {
@@ -81,8 +84,11 @@ body.find-page {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
+  display: flex; /* Changed from column to flex for horizontal layout */
+  flex-direction: row; /* Arrange children in a row */
+  align-items: center; /* Vertically align content */
+  padding: 15px; /* Add padding to the card itself */
+  gap: 15px; /* Space between details and image */
 }
 
 .item-card:hover {
@@ -90,41 +96,44 @@ body.find-page {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.item-image-wrapper {
-  width: 100%;
-  height: 200px; /* 图片区域固定高度 */
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #eee;
-}
-
-.item-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* 裁剪图片以覆盖区域 */
-  display: block;
-}
-
 .item-details {
-  padding: 15px;
+  flex: 1; /* Allows item-details to take up available space */
+  padding: 0; /* Remove padding as it's now on the card */
   text-align: left;
 }
 
+.item-image-wrapper {
+  width: 100px; /* Fixed width for the square container */
+  height: 100px; /* Fixed height for the square container */
+  flex-shrink: 0; /* Prevent the image wrapper from shrinking */
+  display: flex; /* Use flexbox to center image if it's smaller than the container */
+  justify-content: center;
+  align-items: center;
+  background-color: #eee;
+  border-radius: 5px; /* Optional: slight rounded corners for the image wrapper */
+  border: 1px solid #ddd; /* Optional: a subtle border */
+}
+
+.item-image {
+  max-width: 100%; /* Ensures image doesn't overflow container */
+  max-height: 100%; /* Ensures image doesn't overflow container */
+  object-fit: contain; /* Key property: image scales to fit, preserves aspect ratio */
+  display: block; /* Remove any extra space below the image */
+}
+
 .item-name {
-  font-size: 1.3em;
+  font-size: 1.1em; /* Slightly smaller for better fit in horizontal layout */
   font-weight: 700;
   color: var(--text-dark);
-  margin-bottom: 8px;
+  margin-bottom: 5px; /* Reduced margin */
 }
 
 .item-category,
 .item-date,
 .item-building {
-  font-size: 0.9em;
+  font-size: 0.85em; /* Slightly smaller for better fit */
   color: #666;
-  margin-bottom: 4px;
+  margin-bottom: 3px; /* Reduced margin */
 }
 
 .no-items {
@@ -133,6 +142,35 @@ body.find-page {
   font-size: 1.2em;
   color: #888;
   padding: 50px;
+}
+
+@media (max-width: 768px) {
+  /* Adjusted breakpoint for item-card stacking */
+  .item-card {
+    flex-direction: column; /* Stack image and details vertically on smaller screens */
+    align-items: flex-start; /* Align content to the start when stacked */
+    padding: 15px; /* Keep padding */
+  }
+
+  .item-image-wrapper {
+    width: 100%; /* Image wrapper takes full width when stacked */
+    height: 180px; /* Adjust height for stacked image */
+    margin-bottom: 15px; /* Add space below image when stacked */
+  }
+
+  .item-details {
+    padding-left: 0; /* No extra padding on left when stacked */
+  }
+
+  .item-name {
+    font-size: 1.3em; /* Restore larger font for name when stacked */
+  }
+
+  .item-category,
+  .item-date,
+  .item-building {
+    font-size: 0.9em; /* Restore larger font for details when stacked */
+  }
 }
 
 @media (max-width: 600px) {

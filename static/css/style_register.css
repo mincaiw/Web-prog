@@ -43,7 +43,7 @@ body.register-page {
   border-radius: 15px; /* More pronounced rounded corners */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Soft, prominent shadow */
   width: 100%;
-  max-width: 1000px; /* Max width for larger forms */
+  max-width: 800px; /* Max width for larger forms */
   text-align: center;
   animation: fadeInScale 0.6s ease-out; /* Subtle animation on load */
 }

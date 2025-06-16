@@ -36,6 +36,12 @@ endblock %} {% block head %} {{ super() }} {# 包含来自base.html的head内容
       data-building="{{ item.ubuilding }}"
       data-name="{{ item.prdt_nm }}"
     >
+      <div class="item-details">
+        <h3 class="item-name">{{ item.prdt_nm }}</h3>
+        <p class="item-category">카테고리: {{ item.prdt_cl_nm }}</p>
+        <p class="item-date">발견일: {{ item.start_ymd }}</p>
+        <p class="item-building">발견 장소: {{ item.ubuilding }}</p>
+      </div>
       <div class="item-image-wrapper">
         {% if item.image_path %} {# 正确使用url_for来引用静态文件 #}
         <img
@@ -50,12 +56,6 @@ endblock %} {% block head %} {{ super() }} {# 包含来自base.html的head内容
           class="item-image"
         />
         {% endif %}
-      </div>
-      <div class="item-details">
-        <h3 class="item-name">{{ item.prdt_nm }}</h3>
-        <p class="item-category">카테고리: {{ item.prdt_cl_nm }}</p>
-        <p class="item-date">발견일: {{ item.start_ymd }}</p>
-        <p class="item-building">발견 장소: {{ item.ubuilding }}</p>
       </div>
     </div>
     {% endfor %} {% else %}
@@ -82,7 +82,8 @@ endblock %} {% block head %} {{ super() }} {# 包含来自base.html的head内容
       const matchesCategory = category === "ALL" || itemCategory === category;
 
       if (matchesKeyword && matchesCategory) {
-        card.style.display = "block";
+        card.style.display =
+          "flex"; /* Changed from 'block' to 'flex' for visibility */
       } else {
         card.style.display = "none";
       }
