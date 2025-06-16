@@ -267,34 +267,3 @@ def reset_password(lang_code):
     
     # GET 请求时，渲染重置密码页面
     return render_template(f'{lang_code}/auth/reset_password_{lang_code}.html', lang=lang_code, title="Reset Password")
-
-@auth_bp.route('/<string:lang_code>/find')
-def find(lang_code):
-    conn = get_yonsei_db()
-    cursor = conn.cursor()
-
-    # Get sort_by parameter from URL, default to 'latest_upload'
-    sort_by = request.args.get('sort_by', 'latest_upload')
-
-    query = "SELECT * FROM lost_found_items"
-    order_by_clause = ""
-
-    if sort_by == 'latest_upload':
-        order_by_clause = "ORDER BY rgst_ymd DESC"
-    elif sort_by == 'oldest_upload':
-        order_by_clause = "ORDER BY rgst_ymd ASC"
-    elif sort_by == 'discovery_date_asc':
-        order_by_clause = "ORDER BY fd_ymd ASC"
-    elif sort_by == 'discovery_date_desc':
-        order_by_clause = "ORDER BY fd_ymd DESC"
-    elif sort_by == 'alphabetical':
-        order_by_clause = "ORDER BY fd_prdt_nm ASC"
-
-    cursor.execute(f"{query} {order_by_clause}")
-    items = cursor.fetchall()
-    conn.close()
-
-    return render_template(f'{lang_code}/find_{lang_code}.html', lang=lang_code, items=items, title="Find Lost Items", current_sort=sort_by)
-
-# Other routes like view_item, edit_item, delete_item, my_items would go here.
-# For brevity, I'm only including the relevant ones for the request.

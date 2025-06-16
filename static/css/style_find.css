@@ -21,8 +21,8 @@ body.find-page {
 /* General styling for find page */
 .find-page-container {
   padding: 40px 40px;
-  max-width: 1800px;
-  margin: 20px auto;
+  max-width: 1200px;
+  margin: 20px 400px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
